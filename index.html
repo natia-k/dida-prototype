@@ -24,7 +24,7 @@
   --sans:'Inter',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
   /* Refined easing — Apple-level natural curves */
-  --E:cubic-bezier(0.22,1,0.36,1);
+  --E:cubic-bezier(0.2,0.9,0.3,1);
   --E-in:cubic-bezier(0.32,0,0.67,0);
   --E-out:cubic-bezier(0.33,1,0.68,1);
   --C:cubic-bezier(0.25,0.1,0.25,1);
@@ -58,18 +58,11 @@ body::before{
   align-items:center;justify-content:center;
   cursor:pointer;overflow:hidden;
 }
-.intro.out{opacity:0;transition:opacity 1.4s var(--E-out) 0.08s;pointer-events:none;}
-.intro.pulse{animation:introPulse 0.34s var(--E-out) 0.62s both;}
-@keyframes introPulse{
-  0%{filter:none}
-  45%{filter:brightness(1.10) saturate(1.03)}
-  100%{filter:none}
-}
+.intro.out{opacity:0;transition:opacity 0.4s linear;pointer-events:none;}
 #ic{position:absolute;top:0;left:0;pointer-events:none;display:block;}
 .intro-mark{
   position:relative;z-index:2;
   display:flex;align-items:center;justify-content:center;
-  gap:16px;
   user-select:none;
 }
 .intro-word{
@@ -79,22 +72,15 @@ body::before{
   letter-spacing:-0.02em;
   text-transform:lowercase;
   color:rgba(229,223,212,0.92);
-  opacity:0;
-  filter:blur(6px);
-  transform:translateY(2px);
-  transition:opacity 0.42s var(--E), filter 0.62s var(--E), transform 0.62s var(--E);
+  opacity:1;
 }
-.intro-line{
-  height:1px;
-  width:0px;
-  background:linear-gradient(90deg, rgba(0,165,165,0), rgba(0,165,165,0.9), rgba(0,165,165,0));
-  opacity:0.78;
-  transform:translateY(1px);
-  transition:width 0.74s var(--E);
+.intro.flicker .intro-word{animation:introFlicker 0.12s steps(1,end) 0s 1;}
+@keyframes introFlicker{
+  0%{opacity:1}
+  35%{opacity:0.82}
+  70%{opacity:1}
+  100%{opacity:1}
 }
-.intro-line-left{background:linear-gradient(270deg, rgba(0,165,165,0), rgba(0,165,165,0.9), rgba(0,165,165,0));}
-.intro.on .intro-word{opacity:1;filter:blur(0px);transform:none;transition-delay:0.2s;}
-.intro.on .intro-line{width:clamp(80px,11vw,120px);transition-delay:0.28s;}
 
 /* ── NAV ── */
 nav{
@@ -107,6 +93,7 @@ nav{
 @keyframes lp{0%,100%{opacity:1}50%{opacity:0.32}}
 .nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
 .nav-links a{font-family:var(--mono);font-size:8.5px;letter-spacing:0.11em;text-transform:uppercase;text-decoration:none;color:var(--ink-3);transition:color 0.2s var(--C);}
+.nav-links a{letter-spacing:0.14em;}
 .nav-links a:hover{color:var(--ink);}
 .nav-links .cta{color:var(--ink);border-bottom:1px solid var(--teal);padding-bottom:2px;transition:border-color 0.2s var(--C);}
 .nav-links .cta:hover{border-color:var(--ink);}
@@ -132,7 +119,7 @@ nav{
 .hero-ey{
   grid-column:1;grid-row:1;
   font-family:var(--mono);font-size:8.5px;
-  letter-spacing:0.24em;text-transform:uppercase;
+  letter-spacing:0.28em;text-transform:uppercase;
   color:var(--teal);display:block;
   margin-bottom:26px;position:relative;z-index:1;
   opacity:0;
@@ -344,8 +331,8 @@ nav{
 .vc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--teal);transform:scaleX(0);transform-origin:left;transition:transform 0.38s var(--E) 0.04s;}
 .vc:hover{
   background:rgba(0,146,146,0.018);
-  transform:translateY(-3px) scale(1.002);
-  box-shadow:0 12px 32px rgba(0,0,0,0.048),0 4px 12px rgba(0,0,0,0.024);
+  transform:none;
+  box-shadow:none;
 }
 .vc:hover::after{transform:scaleX(1);}
 .vc-n{font-family:var(--mono);font-size:7.5px;letter-spacing:0.13em;color:var(--ink-4);margin-bottom:18px;display:block;}
@@ -372,8 +359,8 @@ nav{
 .dc-card:hover{transition-delay:0s;}
 .dc-card:hover{
   background:var(--dark-s);
-  transform:translateY(-2.5px);
-  box-shadow:0 12px 36px rgba(0,0,0,0.35);
+  transform:none;
+  box-shadow:none;
 }
 .dc-label{font-family:var(--mono);font-size:7.5px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.1);display:block;margin-bottom:20px;}
 .dc-card h3{font-size:17px;font-weight:400;letter-spacing:-0.03em;line-height:1.2;color:var(--dark-ink);margin-bottom:11px;}
@@ -422,8 +409,8 @@ nav{
 .pc.span-row{grid-row:1/span 2;}
 .pc.span-row .pc-q{font-size:17px;line-height:1.62;}
 .pc:hover{
-  transform:translateY(-3px) scale(1.002);
-  box-shadow:0 12px 32px rgba(0,0,0,0.055),0 4px 12px rgba(0,0,0,0.02);
+  transform:none;
+  box-shadow:none;
 }
 .pc-stars{font-size:7.5px;letter-spacing:3.5px;color:var(--teal);margin-bottom:14px;opacity:0.55;}
 .pc-q{font-size:13px;font-weight:300;font-style:italic;line-height:1.72;color:var(--ink);margin-bottom:18px;letter-spacing:-0.01em;}
@@ -501,9 +488,7 @@ footer{border-top:1px solid var(--b);max-width:var(--w);margin:0 auto;padding:24
 <div class="intro" id="intro">
   <canvas id="ic"></canvas>
   <div class="intro-mark" id="introMark">
-    <span class="intro-line intro-line-left"></span>
     <span class="intro-word">dida</span>
-    <span class="intro-line intro-line-right"></span>
   </div>
 </div>
 
@@ -787,7 +772,9 @@ function createField(canvasId, cfg){
     const targetY = l.yF + (centerY - l.yF) * converge;
     const parallaxY = cfg.parallax ? (my - 0.5) * (l.parallaxAmp||0.04) * H : 0;
     const tight = (cfg.convergeTightness == null ? 0.7 : cfg.convergeTightness);
-    const y = Math.round((targetY + Math.sin(t * l.spd * S * (l.mul||1) + l.ph) * l.amp * (1 - converge * tight)) * H + parallaxY);
+    const AMP = 0.85;
+    const DRIFT = 0.55;
+    const y = Math.round((targetY + Math.sin(t * l.spd * S * (l.mul||1) * DRIFT + l.ph) * (l.amp * AMP) * (1 - converge * tight)) * H + parallaxY);
 
     const pk = ((t * l.spd * SM * 0.35 + l.ph) % (Math.PI*2)) / (Math.PI*2);
     const p0 = Math.max(0.001, pk - 0.2);
@@ -804,7 +791,7 @@ function createField(canvasId, cfg){
     g.addColorStop(p1,  `rgba(${C},0)`);
     g.addColorStop(1,   `rgba(${C},0)`);
     ctx.strokeStyle = g;
-    ctx.lineWidth = l.w || 1;
+    ctx.lineWidth = (l.w || 1) * 0.9;
     ctx.beginPath();
     ctx.moveTo(0,y);
     ctx.lineTo(W,y);
@@ -821,16 +808,18 @@ function createField(canvasId, cfg){
     const parallaxY = cfg.parallax ? (my - 0.5) * 0.018 : 0;
     const nx = Math.round((n.x + parallaxX) * W);
     const nTight = (cfg.nodeConvergeTightness == null ? 0.6 : cfg.nodeConvergeTightness);
-    const ny = Math.round((targetY + Math.sin(t * 0.000024 * S * (n.mul||1) + n.ph) * 0.017 * (1 - converge * nTight) + parallaxY) * H);
+    const AMP = 0.85;
+    const DRIFT = 0.55;
+    const ny = Math.round((targetY + Math.sin(t * 0.000024 * S * (n.mul||1) * DRIFT + n.ph) * (0.017 * AMP) * (1 - converge * nTight) + parallaxY) * H);
     const hot = 1 + hp * 0.38;
-    const a  = n.op * (0.6 + 0.4 * Math.sin(t * 0.00048 * S + n.ph)) * (1 - converge * 0.3) * hot;
+    const a  = n.op * (0.6 + 0.4 * Math.sin(t * 0.00048 * S * DRIFT + n.ph)) * (1 - converge * 0.3) * hot;
 
-    const g = ctx.createRadialGradient(nx,ny,0, nx,ny,n.r*6);
+    const g = ctx.createRadialGradient(nx,ny,0, nx,ny,n.r*4.2);
     g.addColorStop(0, `rgba(${C},${a*0.45})`);
     g.addColorStop(1, `rgba(${C},0)`);
     ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(nx,ny,n.r*6,0,Math.PI*2);
+    ctx.arc(nx,ny,n.r*4.2,0,Math.PI*2);
     ctx.fill();
     ctx.fillStyle = `rgba(${C},${Math.min(a*1.2,0.65)})`;
     ctx.beginPath();
@@ -1257,10 +1246,14 @@ function dismiss(immediate){
 
 function runIntro(){
   if(!intro) return;
-  intro.classList.add('on');
-  intro.classList.add('pulse');
-  introField.triggerConverge();
-  setTimeout(()=>dismiss(false), 1400);
+  intro.classList.add('flicker');
+  /* 1–2 frames of flicker, then converge */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    introField.triggerConverge();
+  }));
+  /* fade after convergence "snap" */
+  const tFade = 700 + 90 + 30;
+  setTimeout(()=>dismiss(false), tFade);
 }
 
 /* Decisive: scroll dismisses instantly */
