@@ -59,34 +59,42 @@ body::before{
   cursor:pointer;overflow:hidden;
 }
 .intro.out{opacity:0;transition:opacity 1.4s var(--E-out) 0.08s;pointer-events:none;}
-.intro.xform{filter:brightness(1.08) saturate(1.02);}
+.intro.pulse{animation:introPulse 0.34s var(--E-out) 0.62s both;}
+@keyframes introPulse{
+  0%{filter:none}
+  45%{filter:brightness(1.10) saturate(1.03)}
+  100%{filter:none}
+}
 #ic{position:absolute;top:0;left:0;pointer-events:none;display:block;}
-.i-center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
-.i-stage{
-  position:relative;
-  height:clamp(42px,6.8vw,82px);
+.intro-mark{
+  position:relative;z-index:2;
   display:flex;align-items:center;justify-content:center;
-  min-width:min(520px,82vw);
+  gap:16px;
+  user-select:none;
 }
-.iw{
-  position:absolute;
-  font-size:clamp(30px,5.2vw,65px);
-  font-weight:400;letter-spacing:-0.046em;
-  color:#d4cfc3;white-space:nowrap;
-  opacity:0;transform:translateY(10px);
-  transition:opacity 0.72s var(--E),transform 0.72s var(--E);
+.intro-word{
+  font-family:var(--sans);
+  font-size:18px;
+  font-weight:400;
+  letter-spacing:-0.02em;
+  text-transform:lowercase;
+  color:rgba(229,223,212,0.92);
+  opacity:0;
+  filter:blur(6px);
+  transform:translateY(2px);
+  transition:opacity 0.42s var(--E), filter 0.62s var(--E), transform 0.62s var(--E);
 }
-.iw.in{opacity:1;transform:none;}
-.iw.out{opacity:0;transform:translateY(-10px);
-  transition:opacity 0.35s var(--E-in),transform 0.35s var(--E-in);}
-.iw em{font-style:italic;font-weight:300;color:var(--teal-hi);}
-.i-pip{width:3px;height:3px;border-radius:50%;background:var(--teal-hi);margin-top:24px;opacity:0;transition:opacity 0.58s var(--E-out) 0.06s;}
-.i-pip.on{opacity:1;}
-.i-hint{position:absolute;bottom:38px;display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0;transition:opacity 0.65s var(--E-out) 0.12s;}
-.i-hint.on{opacity:1;}
-.i-hint span{font-family:var(--mono);font-size:7px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.16);}
-.i-line{width:1px;height:26px;background:linear-gradient(to bottom,rgba(255,255,255,0.16),transparent);animation:tick 2s cubic-bezier(0.45,0,0.55,1) infinite;}
-@keyframes tick{0%,100%{opacity:0.42;transform:scaleY(1);}50%{opacity:0.06;transform:scaleY(0.22);}}
+.intro-line{
+  height:1px;
+  width:0px;
+  background:linear-gradient(90deg, rgba(0,165,165,0), rgba(0,165,165,0.9), rgba(0,165,165,0));
+  opacity:0.78;
+  transform:translateY(1px);
+  transition:width 0.74s var(--E);
+}
+.intro-line-left{background:linear-gradient(270deg, rgba(0,165,165,0), rgba(0,165,165,0.9), rgba(0,165,165,0));}
+.intro.on .intro-word{opacity:1;filter:blur(0px);transform:none;transition-delay:0.2s;}
+.intro.on .intro-line{width:clamp(80px,11vw,120px);transition-delay:0.28s;}
 
 /* ── NAV ── */
 nav{
@@ -485,11 +493,11 @@ footer{border-top:1px solid var(--b);max-width:var(--w);margin:0 auto;padding:24
 <!-- INTRO -->
 <div class="intro" id="intro">
   <canvas id="ic"></canvas>
-  <div class="i-center">
-    <div class="i-stage"><span class="iw" id="iw">Precision.</span></div>
-    <div class="i-pip" id="ip"></div>
+  <div class="intro-mark" id="introMark">
+    <span class="intro-line intro-line-left"></span>
+    <span class="intro-word">dida</span>
+    <span class="intro-line intro-line-right"></span>
   </div>
-  <div class="i-hint" id="ih"><span>Scroll</span><div class="i-line"></div></div>
 </div>
 
 <!-- NAV -->
@@ -720,9 +728,9 @@ function createField(canvasId, cfg){
 
   let compress = 0;
   let convergeT = -1;
-  const CONVERGE_DUR = 1400;
-  const CONVERGE_HOLD = 180;
-  const RELAX_DUR = 2200;
+  const CONVERGE_DUR = cfg.convergeDur || 1400;
+  const CONVERGE_HOLD = cfg.convergeHold || 180;
+  const RELAX_DUR = cfg.relaxDur || 2200;
 
   function resize(){
     const p = canvas.parentElement;
@@ -939,17 +947,18 @@ function createField(canvasId, cfg){
 
 const introField = createField('ic', {
   rgb:'0,165,165', cornerRgb:'255,255,255',
-  corners:true, cross:true, speed:1,
-  parallax:false, converge:false,
+  corners:false, cross:false, speed:1,
+  parallax:false, converge:true,
+  convergeDur:700, convergeHold:90, relaxDur:920,
   lines:[
-    {yF:0.44,spd:0.000015,ph:0,  amp:0.025,op:0.13,w:1,  parallaxAmp:0.04},
-    {yF:0.50,spd:0.000009,ph:2.2,amp:0.015,op:0.07,w:1,  parallaxAmp:0.03},
-    {yF:0.47,spd:0.000006,ph:4.6,amp:0.009,op:0.04,w:0.8,parallaxAmp:0.02},
-    {yF:0.55,spd:0.000012,ph:1.3,amp:0.019,op:0.03,w:0.8,parallaxAmp:0.02},
+    {yF:0.44,spd:0.000015,ph:0,  amp:0.022,op:0.18,w:1,  parallaxAmp:0.04},
+    {yF:0.50,spd:0.000009,ph:2.2,amp:0.014,op:0.10,w:1,  parallaxAmp:0.03},
+    {yF:0.47,spd:0.000006,ph:4.6,amp:0.009,op:0.06,w:0.85,parallaxAmp:0.02},
+    {yF:0.55,spd:0.000012,ph:1.3,amp:0.018,op:0.05,w:0.85,parallaxAmp:0.02},
   ],
   nodes:[
-    {x:0.28,yF:0.44,vx:0.000019,ph:0,  r:1.7,op:0.5},
-    {x:0.71,yF:0.50,vx:0.000012,ph:1.8,r:1.2,op:0.3},
+    {x:0.28,yF:0.44,vx:0.000019,ph:0,  r:1.7,op:0.55},
+    {x:0.71,yF:0.50,vx:0.000012,ph:1.8,r:1.2,op:0.34},
   ]
 });
 introField.start();
@@ -1171,52 +1180,43 @@ const ctaW = document.getElementById('ctaWrap');
 if(ctaW) ctaObs.observe(ctaW);
 
 const intro = document.getElementById('intro');
-const iw    = document.getElementById('iw');
-const ip    = document.getElementById('ip');
-const ih    = document.getElementById('ih');
-const words = ['Precision.','Depth.','Ownership.','Research.','Production.','<em>Custom</em>\u00a0ML.'];
-let idx=0, done=false;
+let done=false;
 
-setTimeout(()=>iw.classList.add('in'), 120);
+/* Hero should already be alive underneath the intro */
+heroField.start();
+const hc = document.getElementById('hc');
+if(hc) setTimeout(()=>hc.classList.add('on'), 120);
 
-const iv = setInterval(()=>{
-  idx++;
-  if(idx >= words.length){ clearInterval(iv); return; }
-  iw.classList.remove('in');
-  iw.classList.add('out');
-  setTimeout(()=>{
-    iw.innerHTML = words[idx];
-    iw.classList.remove('out');
-    iw.classList.add('in');
-    if(idx === words.length - 1){
-      ip.classList.add('on');
-      setTimeout(()=>ih.classList.add('on'), 280);
-    }
-  }, 250);
-}, 960);
-
-function dismiss(){
+function dismiss(immediate){
   if(done) return; done=true;
-  clearInterval(iv);
-  intro.classList.add('xform');
+  if(!intro) return;
+
   intro.classList.add('out');
+  if(immediate){
+    intro.style.transitionDuration = '0.55s';
+    intro.style.transitionDelay = '0s';
+  }
 
-  heroField.start();
-  const hc = document.getElementById('hc');
-  if(hc) setTimeout(()=>hc.classList.add('on'), 420);
-
-  setTimeout(()=>{
-    heroField.triggerConverge();
-  }, 480);
+  heroField.triggerConverge();
 
   setTimeout(()=>{
     intro.remove();
     introField.stop();
-  }, 1600);
+  }, immediate ? 650 : 1600);
 }
-intro.addEventListener('click', dismiss);
-window.addEventListener('scroll', dismiss, {once:true});
-setTimeout(dismiss, words.length * 960 + 880);
+
+function runIntro(){
+  if(!intro) return;
+  intro.classList.add('on');
+  intro.classList.add('pulse');
+  introField.triggerConverge();
+  setTimeout(()=>dismiss(false), 1400);
+}
+
+/* Decisive: scroll dismisses instantly */
+window.addEventListener('scroll', ()=>dismiss(true), {passive:true, once:true});
+intro.addEventListener('click', ()=>dismiss(true));
+runIntro();
 </script>
 </body>
 </html>
