@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dida — Scientific Machine Learning</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono&display=swap');
+
+        :root {
+            --bg: #F3EFE4; 
+            --ink: #0c0c0c; 
+            --teal: #009595; 
+            --b: rgba(0,0,0,0.06); 
+            --dark: #090d10; 
+            --max-w: 1100px; 
+            --sans: 'Inter', sans-serif; 
+            --mono: 'JetBrains Mono', monospace;
+            --E-fluid: cubic-bezier(0.19, 1, 0.22, 1); 
+            --E-mech: cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; cursor: crosshair; }
+        body { 
+            background: var(--bg); 
+            color: var(--ink); 
+            font-family: var(--sans); 
+            -webkit-font-smoothing: antialiased; 
+            overflow-x: hidden; 
+        }
+
+        /* ─── 1. STILLNESS (INTRO) ─── */
+        #intro { 
+            position: fixed; inset: 0; z-index: 9999; 
+            background: #050708; display: flex; 
+            align-items: center; justify-content: center; 
+            transition: opacity 1.2s var(--E-fluid); 
+        }
+        #intro.out { opacity: 0; pointer-events: none; }
+        #iw { 
+            font-size: 32px; color: #E8E2D8; opacity: 0; 
+            transition: 0.8s var(--E-mech); position: absolute; 
+            letter-spacing: -0.02em;
+        }
+
+        /* ─── 2. NAVIGATION & STRUCTURE ─── */
+        nav { 
+            max-width: var(--max-w); margin: 0 auto; 
+            padding: 60px 50px; display: flex; 
+            justify-content: space-between; position: relative; z-index: 100; 
+        }
+        .logo { 
+            font-weight: 600; text-decoration: none; color: var(--ink); 
+            display: flex; align-items: center; gap: 12px; font-size: 17px; 
+        }
+        .l-pip { width: 7px; height: 7px; background: var(--teal); border-radius: 50%; }
+
+        .hero { 
+            max-width: var(--max-w); margin: 0 auto; 
+            padding: 80px 50px 140px; display: grid; 
+            grid-template-columns: 1fr 300px; gap: 100px; position: relative; 
+        }
+        #hc { 
+            position: absolute; inset: 0; z-index: 0; 
+            pointer-events: none; opacity: 0; transition: opacity 3s var(--E-fluid); 
+        }
+        #hc.on { opacity: 1; }
+
+        h1 { 
+            font-size: clamp(40px, 8.5vw, 90px); line-height: 0.88; 
+            letter-spacing: -0.06em; font-weight: 400; margin: 30px 0; 
+        }
+        h1 em { font-style: italic; font-weight: 300; color: #4a4a4a; }
+        .hero-sub { 
+            max-width: 440px; font-size: 18px; color: #555; 
+            margin-bottom: 50px; line-height: 1.5; 
+        }
+
+        /* ─── 3. INTERACTIVE ELEMENTS ─── */
+        .btn-elite { 
+            display: inline-block; font-family: var(--mono); 
+            font-size: 10px; text-transform: uppercase; 
+            color: var(--ink); text-decoration: none; border: 1px solid var(--b); 
+            padding: 16px 28px; transition: all 0.4s var(--E-mech); 
+        }
+        .btn-elite:hover { 
+            border-color: var(--ink); background: var(--ink); 
+            color: #fff; transform: translateY(-2px); 
+        }
+
+        /* ─── 4. MECHANICAL REVEALS ─── */
+        .h-stat { border-top: 1px solid var(--b); padding: 40px 0; overflow: hidden; }
+        .h-stat-n { 
+            font-size: 40px; font-weight: 400; 
+            transform: translateY(110%); transition: transform 0.9s var(--E-mech); 
+        }
+        .sr.on .h-stat-n { transform: translateY(0); }
+        .h-stat-l { 
+            font-family: var(--mono); font-size: 8px; color: #999; 
+            text-transform: uppercase; margin-top: 12px; letter-spacing: 0.15em; 
+        }
+
+        .sr { opacity: 0; transition: opacity 2s var(--E-fluid); }
+        .sr.on { opacity: 1; }
+
+        .dark-section { background: var(--dark); color: #E8E2D8; padding: 160px 50px; }
+    </style>
+</head>
+<body>
+
+<div id="intro"><span id="iw">Precision.</span></div>
+
+<nav>
+    <a href="#" class="logo"><div class="l-pip"></div>dida</a>
+    <div style="font-family:var(--mono); font-size:9px; opacity:0.4; letter-spacing:0.2em;">PROTOCOL_2026</div>
+</nav>
+
+<header class="hero">
+    <canvas id="hc"></canvas>
+    <div class="hero-content sr">
+        <span style="font-family:var(--mono); color:var(--teal); font-size:9px; letter-spacing:0.2em;">SCIENTIFIC MACHINE LEARNING</span>
+        <h1>Built for the<br>problem you<br><em>actually have.</em></h1>
+        <p class="hero-sub">PhD-level engineering for mission-critical industrial complexity. We turn academic research into proprietary IP.</p>
+        <a href="#" class="btn-elite">Initiate Technical Audit</a>
+    </div>
+
+    <aside class="sr">
+        <div class="h-stat"><div class="h-stat-n">32</div><div class="h-stat-l">Core Engineers</div></div>
+        <div class="h-stat"><div class="h-stat-n">100+</div><div class="h-stat-l">Live Deployments</div></div>
+        <div class="h-stat"><div class="h-stat-n">PhD</div><div class="h-stat-l">Scientific Depth</div></div>
+    </aside>
+</header>
+
+<section class="dark-section">
+    <div class="sr" style="max-width:var(--max-w); margin:0 auto;">
+        <span style="font-family:var(--mono); color:var(--teal); font-size:9px; letter-spacing:0.2em;">SYSTEMS PHILOSOPHY</span>
+        <h2 style="font-size: 52px; font-weight:400; margin: 30px 0; letter-spacing: -0.04em;">Research is not a product.<br>We engineer for the noise.</h2>
+        <p style="opacity:0.5; max-width:600px; font-size:20px; line-height:1.6;">Generic black-box models fail at the edge. We build systems that retain accuracy under real-world operating constraints.</p>
+    </div>
+</section>
+
+<script>
+    /* ─── INTRO ENGINE ─── */
+    const iw = document.getElementById('iw'), 
+          intro = document.getElementById('intro'), 
+          words = ['Precision.', 'Scientific Depth.', 'IP Ownership.', 'Custom ML.'];
+    let idx = 0, t = 0, focusScale = 0, active = false;
+
+    function cycle() { 
+        if(idx < words.length - 1) { 
+            setTimeout(() => { 
+                iw.style.opacity = 0;
+                setTimeout(() => { 
+                    idx++; iw.innerHTML = words[idx]; iw.style.opacity = 1; cycle(); 
+                }, 600); 
+            }, 1000); 
+        }
+    }
+
+    window.onload = () => { iw.style.opacity = 1; cycle(); };
+
+    function dismiss() { 
+        if(active) return; active = true;
+        intro.classList.add('out'); 
+        setTimeout(() => { 
+            document.getElementById('hc').classList.add('on'); 
+            document.querySelectorAll('.sr').forEach((el, i) => { 
+                setTimeout(() => el.classList.add('on'), i * 250); 
+            }); 
+        }, 800); 
+    };
+
+    window.addEventListener('scroll', dismiss, {once:true});
+    intro.addEventListener('click', dismiss);
+
+    /* ─── SIGNATURE MOMENT: PHYSICS SIGNAL ─── */
+    const canvas = document.getElementById('hc'), ctx = canvas.getContext('2d');
+    function res() { 
+        canvas.width = canvas.offsetWidth * 2; 
+        canvas.height = canvas.offsetHeight * 2; 
+        ctx.scale(2, 2); 
+    }
+    window.addEventListener('resize', res); res();
+
+    function draw() { 
+        t += 0.0035; 
+        if(document.getElementById('hc').classList.contains('on')) { 
+            focusScale = Math.min(focusScale + 0.0025, 1); 
+        } 
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        ctx.strokeStyle = 'rgba(0, 149, 149, 0.22)'; 
+        ctx.lineWidth = 0.7; 
+
+        for(let i=0; i<6; i++) { 
+            ctx.beginPath(); 
+            for(let x=0; x < canvas.width/2; x += 15) { 
+                // Physics Logic: Lines converge toward a signal center as focusScale grows
+                const amp = (1 - focusScale) * 80 + 15; 
+                const y = (canvas.height/12) + (i * 8) + Math.sin(x * 0.003 + t + i) * amp; 
+                ctx.lineTo(x, y); 
+            } 
+            ctx.stroke(); 
+        } 
+        requestAnimationFrame(draw); 
+    }
+    draw();
+
+    /* ─── OBSERVER ENGINE ─── */
+    const obs = new IntersectionObserver((es) => { 
+        es.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); }); 
+    }, {threshold: 0.1});
+    document.querySelectorAll('.sr').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
