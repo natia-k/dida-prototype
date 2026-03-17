@@ -59,6 +59,7 @@ body::before{
   cursor:pointer;overflow:hidden;
 }
 .intro.out{opacity:0;transition:opacity 1.4s var(--E-out) 0.08s;pointer-events:none;}
+.intro.xform{filter:brightness(1.08) saturate(1.02);}
 #ic{position:absolute;top:0;left:0;pointer-events:none;display:block;}
 .i-center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
 .i-stage{
@@ -137,6 +138,11 @@ nav{
   position:relative;z-index:1;
   opacity:0;animation:rise 0.82s var(--E) 0.18s forwards;
 }
+.hero h1 .h-line{
+  display:block;
+  will-change:transform;
+  transform:translate3d(var(--hx,0px),var(--hy,0px),0);
+}
 .hero h1 em{font-style:italic;font-weight:300;color:var(--ink-2);}
 .hero-sub{
   grid-column:1;grid-row:3;
@@ -146,6 +152,8 @@ nav{
   letter-spacing:0.003em;
   position:relative;z-index:1;
   opacity:0;animation:rise 0.82s var(--E) 0.32s forwards;
+  will-change:transform;
+  transform:translate3d(var(--sx,0px),var(--sy,0px),0);
 }
 .hero-act{
   grid-column:1;grid-row:4;
@@ -153,6 +161,8 @@ nav{
   position:relative;z-index:1;
   opacity:0;animation:rise 0.82s var(--E) 0.45s forwards;
   padding-bottom:80px;
+  will-change:transform;
+  transform:translate3d(var(--ax,0px),var(--ay,0px),0);
 }
 .hero-aside{
   grid-column:2;grid-row:1/span 4;
@@ -179,10 +189,38 @@ nav{
 
 @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 
-.btn-p{font-family:var(--mono);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--teal);padding-bottom:3px;transition:border-color 0.2s var(--C);}
-.btn-p:hover{border-color:var(--ink);}
-.btn-s{font-family:var(--mono);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color 0.2s var(--C);}
-.btn-s:hover{color:var(--ink);}
+.btn-p{
+  font-family:var(--mono);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;
+  padding-bottom:3px;
+  position:relative;
+}
+.btn-p::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg, rgba(0,146,146,0), rgba(0,146,146,0.95), rgba(0,146,146,0));
+  transform:scaleX(0.18);
+  transform-origin:left;
+  transition:transform 0.55s var(--E), filter 0.55s var(--E), opacity 0.55s var(--E);
+  opacity:0.72;
+}
+.btn-p:hover::after{transform:scaleX(1);opacity:0.95;filter:brightness(1.08);}
+.btn-p:focus-visible{outline:2px solid rgba(0,146,146,0.35);outline-offset:6px;border-radius:2px;}
+
+.btn-s{
+  font-family:var(--mono);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;
+  color:var(--ink-3);text-decoration:none;
+  display:inline-flex;align-items:baseline;gap:6px;
+  transition:color 0.2s var(--C), opacity 0.2s var(--C);
+}
+.btn-s .btn-s-arr{
+  display:inline-block;
+  transition:transform 0.38s var(--E), opacity 0.2s var(--C);
+  will-change:transform;
+  opacity:0.7;
+}
+.btn-s:hover{color:var(--ink);opacity:0.95;}
+.btn-s:hover .btn-s-arr{transform:translate3d(4px,0,0);opacity:0.95;}
+.btn-s:focus-visible{outline:2px solid rgba(0,146,146,0.28);outline-offset:6px;border-radius:2px;}
 
 /* ── LAYOUT ── */
 .w{max-width:var(--w);margin:0 auto;padding:0 var(--g);}
@@ -469,11 +507,15 @@ footer{border-top:1px solid var(--b);max-width:var(--w);margin:0 auto;padding:24
 <header class="hero" id="hero">
   <canvas id="hc"></canvas>
   <span class="hero-ey">Custom Machine Learning</span>
-  <h1>Built for the<br>problem you<br><em>actually have.</em></h1>
+  <h1 id="heroTitle">
+    <span class="h-line" data-depth="0.85">Built for the</span>
+    <span class="h-line" data-depth="1.0">problem you</span>
+    <span class="h-line" data-depth="1.15"><em>actually have.</em></span>
+  </h1>
   <p class="hero-sub">Generic AI is trained for everyone. We engineer machine learning systems for the exact constraints, data, and demands of your operation.</p>
   <div class="hero-act">
     <a href="https://dida.do/contact" class="btn-p">Talk to an engineer</a>
-    <a href="https://dida.do/projects" class="btn-s">See case studies →</a>
+    <a href="https://dida.do/projects" class="btn-s">See case studies <span class="btn-s-arr">→</span></a>
   </div>
   <aside class="hero-aside">
     <div class="h-stat">
@@ -664,12 +706,14 @@ function easeOutExpo(t){return t>=1?1:1-Math.pow(2,-10*t);}
 
 function createField(canvasId, cfg){
   const canvas = document.getElementById(canvasId);
-  if(!canvas) return {start:()=>{},stop:()=>{},setMouse:()=>{},setCompress:()=>{},triggerConverge:()=>{}};
+  if(!canvas) return {start:()=>{},stop:()=>{},setMouse:()=>{},setCompress:()=>{},setHotspot:()=>{},triggerConverge:()=>{}};
   const ctx = canvas.getContext('2d',{alpha:true});
   const C = cfg.rgb || '0,165,165';
   const SM = cfg.speed || 1;
   let W=0, H=0, t0=null, raf=null, alive=false, lastFrame=0;
   let mx=0.5, my=0.5;
+  let hx=0.5, hy=0.42, hp=0;
+  let fy=0.5;
 
   const lines = cfg.lines || [];
   const nodes = (cfg.nodes || []).map(n=>({...n}));
@@ -705,7 +749,7 @@ function createField(canvasId, cfg){
   }
 
   function drawLine(t, l, converge){
-    const centerY = 0.5;
+    const centerY = (cfg.focusable ? fy : 0.5);
     const targetY = l.yF + (centerY - l.yF) * converge;
     const parallaxY = cfg.parallax ? (my - 0.5) * (l.parallaxAmp||0.04) * H : 0;
     const y = Math.round((targetY + Math.sin(t * l.spd * SM + l.ph) * l.amp * (1 - converge * 0.7)) * H + parallaxY);
@@ -715,12 +759,13 @@ function createField(canvasId, cfg){
     const p1 = Math.min(0.999, pk + 0.2);
     if(p0 >= p1) return;
 
+    const hot = 1 + hp * 0.26;
     const g = ctx.createLinearGradient(0,0,W,0);
     g.addColorStop(0,   `rgba(${C},0)`);
     g.addColorStop(p0,  `rgba(${C},0)`);
-    g.addColorStop((p0+pk)*0.5, `rgba(${C},${l.op*0.4})`);
-    g.addColorStop(pk,  `rgba(${C},${l.op})`);
-    g.addColorStop((pk+p1)*0.5, `rgba(${C},${l.op*0.4})`);
+    g.addColorStop((p0+pk)*0.5, `rgba(${C},${l.op*0.4*hot})`);
+    g.addColorStop(pk,  `rgba(${C},${l.op*hot})`);
+    g.addColorStop((pk+p1)*0.5, `rgba(${C},${l.op*0.4*hot})`);
     g.addColorStop(p1,  `rgba(${C},0)`);
     g.addColorStop(1,   `rgba(${C},0)`);
     ctx.strokeStyle = g;
@@ -734,13 +779,14 @@ function createField(canvasId, cfg){
   function drawNode(t, n, converge){
     n.x += n.vx * SM;
     if(n.x > 1.1) n.x = -0.1;
-    const centerY = 0.5;
+    const centerY = (cfg.focusable ? fy : 0.5);
     const targetY = n.yF + (centerY - n.yF) * converge;
     const parallaxX = cfg.parallax ? (mx - 0.5) * 0.015 : 0;
     const parallaxY = cfg.parallax ? (my - 0.5) * 0.018 : 0;
     const nx = Math.round((n.x + parallaxX) * W);
     const ny = Math.round((targetY + Math.sin(t * 0.000024 * SM + n.ph) * 0.017 * (1 - converge * 0.6) + parallaxY) * H);
-    const a  = n.op * (0.6 + 0.4 * Math.sin(t * 0.00048 * SM + n.ph)) * (1 - converge * 0.3);
+    const hot = 1 + hp * 0.38;
+    const a  = n.op * (0.6 + 0.4 * Math.sin(t * 0.00048 * SM + n.ph)) * (1 - converge * 0.3) * hot;
 
     const g = ctx.createRadialGradient(nx,ny,0, nx,ny,n.r*6);
     g.addColorStop(0, `rgba(${C},${a*0.45})`);
@@ -806,6 +852,39 @@ function createField(canvasId, cfg){
       ctx.translate(0, -H * 0.5);
       for(let i=0;i<lines.length;i++) drawLine(t, lines[i], conv);
       for(let i=0;i<nodes.length;i++) drawNode(t, nodes[i], conv);
+      if(cfg.hotspot && (hp > 0.001 || conv > 0.001)){
+        const x = Math.round(hx * W);
+        const y = Math.round(((cfg.focusable ? fy : 0.5)) * H);
+        const pulse = Math.max(hp * 0.55, conv * 0.7);
+
+        const rg = ctx.createRadialGradient(x,y,0, x,y,Math.max(W,H)*0.22);
+        rg.addColorStop(0, `rgba(${C},${0.10*pulse})`);
+        rg.addColorStop(0.55, `rgba(${C},${0.03*pulse})`);
+        rg.addColorStop(1, `rgba(${C},0)`);
+        ctx.fillStyle = rg;
+        ctx.fillRect(0,0,W,H);
+
+        const seg = Math.round(W * (0.16 + 0.10 * pulse));
+        const g1 = ctx.createLinearGradient(x-seg,0,x+seg,0);
+        g1.addColorStop(0, `rgba(${C},0)`);
+        g1.addColorStop(0.5, `rgba(${C},${0.11*pulse})`);
+        g1.addColorStop(1, `rgba(${C},0)`);
+        ctx.strokeStyle = g1;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x-seg, y);
+        ctx.lineTo(x+seg, y);
+        ctx.stroke();
+
+        ctx.strokeStyle = `rgba(${C},${0.06*pulse})`;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(Math.max(0, x - seg), y);
+        ctx.moveTo(Math.min(W, x + seg), y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
+      }
       if(cfg.corners) drawCorners();
       if(cfg.cross) drawCross(t);
       ctx.restore();
@@ -846,6 +925,12 @@ function createField(canvasId, cfg){
     },
     setMouse(x,y){ mx=x; my=y; },
     setCompress(v){ compress = Math.max(0, Math.min(1, v)); },
+    setHotspot(x,y,p,focusY){
+      hx = Math.max(0, Math.min(1, x));
+      hy = Math.max(0, Math.min(1, y));
+      hp = Math.max(0, Math.min(1, p));
+      fy = Math.max(0.06, Math.min(0.94, focusY));
+    },
     triggerConverge(){
       if(cfg.converge) convergeT = performance.now();
     }
@@ -873,6 +958,8 @@ const heroField = createField('hc', {
   rgb:'0,146,146', speed:0.9,
   corners:false, cross:false, parallax:true,
   converge:true,
+  focusable:true,
+  hotspot:true,
   lines:[
     {yF:0.38,spd:0.000015,ph:0,  amp:0.022,op:0.08,w:1,  parallaxAmp:0.05},
     {yF:0.52,spd:0.000009,ph:2.2,amp:0.012,op:0.04,w:0.9,parallaxAmp:0.03},
@@ -913,6 +1000,91 @@ window.addEventListener('mousemove', e=>{
   targetMY = e.clientY / window.innerHeight;
 },{passive:true});
 tickMouse();
+
+/* Hero spatial layering + headline-proximity intelligence (Safari-safe, lightweight) */
+const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const heroEl = document.getElementById('hero');
+const heroTitle = document.getElementById('heroTitle');
+const heroLines = heroTitle ? Array.from(heroTitle.querySelectorAll('.h-line')) : [];
+const heroSub = document.querySelector('.hero-sub');
+const heroAct = document.querySelector('.hero-act');
+let px=0, py=0, tpx=0, tpy=0;
+let thot=0, hot=0;
+let lastPulse = 0;
+
+function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+function heroRAF(){
+  px += (tpx - px) * 0.06;
+  py += (tpy - py) * 0.06;
+  hot += (thot - hot) * 0.08;
+
+  for(let i=0;i<heroLines.length;i++){
+    const d = parseFloat(heroLines[i].dataset.depth || '1');
+    const k = 7.5;
+    heroLines[i].style.setProperty('--hx', (px * k * d).toFixed(3) + 'px');
+    heroLines[i].style.setProperty('--hy', (py * k * 0.78 * d).toFixed(3) + 'px');
+  }
+  if(heroSub){
+    heroSub.style.setProperty('--sx', (px * 5.5 * 0.72).toFixed(3) + 'px');
+    heroSub.style.setProperty('--sy', (py * 5.5 * 0.58).toFixed(3) + 'px');
+  }
+  if(heroAct){
+    heroAct.style.setProperty('--ax', (px * 6.0 * 0.52).toFixed(3) + 'px');
+    heroAct.style.setProperty('--ay', (py * 6.0 * 0.42).toFixed(3) + 'px');
+  }
+  requestAnimationFrame(heroRAF);
+}
+requestAnimationFrame(heroRAF);
+
+function updateHeroHotspot(clientX, clientY){
+  if(!heroTitle) return;
+  const r = heroTitle.getBoundingClientRect();
+  const cx = r.left + r.width * 0.52;
+  const cy = r.top + r.height * 0.44;
+
+  const dx = clientX - cx;
+  const dy = clientY - cy;
+  const rr = Math.max(220, Math.min(440, Math.max(r.width, r.height) * 1.05));
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const p = clamp01(1 - dist / rr);
+  thot = p;
+
+  const nx = clamp01(cx / window.innerWidth);
+  const ny = clamp01(cy / window.innerHeight);
+  const focusY = clamp01((r.top + r.height * 0.56) / window.innerHeight);
+  heroField.setHotspot(nx, ny, p, focusY);
+
+  const now = performance.now();
+  if(p > 0.62 && (now - lastPulse) > 1900){
+    lastPulse = now;
+    heroField.triggerConverge();
+  }
+}
+
+function onHeroMove(e){
+  if(prefersReduced || !finePointer) return;
+  const cx = window.innerWidth * 0.5;
+  const cy = window.innerHeight * 0.35;
+  const dx = (e.clientX - cx) / window.innerWidth;
+  const dy = (e.clientY - cy) / window.innerHeight;
+  tpx = Math.max(-1, Math.min(1, dx * 2));
+  tpy = Math.max(-1, Math.min(1, dy * 2));
+  updateHeroHotspot(e.clientX, e.clientY);
+}
+window.addEventListener('mousemove', onHeroMove, {passive:true});
+
+function resetHeroDepth(){
+  tpx = 0; tpy = 0; thot = 0;
+  if(heroTitle){
+    const r = heroTitle.getBoundingClientRect();
+    const cx = r.left + r.width * 0.52;
+    const cy = r.top + r.height * 0.44;
+    heroField.setHotspot(clamp01(cx / window.innerWidth), clamp01(cy / window.innerHeight), 0, clamp01((r.top + r.height * 0.56) / window.innerHeight));
+  }
+}
+window.addEventListener('mouseleave', resetHeroDepth);
 
 function onScroll(){
   const hero = document.getElementById('hero');
@@ -1026,6 +1198,7 @@ const iv = setInterval(()=>{
 function dismiss(){
   if(done) return; done=true;
   clearInterval(iv);
+  intro.classList.add('xform');
   intro.classList.add('out');
 
   heroField.start();
