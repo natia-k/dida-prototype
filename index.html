@@ -1,63 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dida — Custom ML Engineering</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono&display=swap');
-        :root {
-            --bg: #0D0F10; --ink: #E8E2D8; --teal: #009595; --b: rgba(255,255,255,0.1);
-            --max-w: 1100px; --sans: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
-            --E-fluid: cubic-bezier(0.19, 1, 0.22, 1); --E-mech: cubic-bezier(0.33, 1, 0.68, 1);
-        }
-        * { margin:0; padding:0; box-sizing:border-box; cursor: crosshair; }
-        body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-        
-        /* THE GRAIN OVERLAY */
-        body::before {
-            content: ""; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-            background: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PScwIDAgMjAwIDIwMCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nLjY1JyBzdGl0Y2hUaWxlcz0nc3RpdGNoJy8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgZmlsdGVyPSd1cmwoI24pJyBvcGFjaXR5PScuMDcnLz48L3N2Zz4=');
-        }
-
-        #intro { position: fixed; inset: 0; z-index: 9998; background: #050708; display: flex; align-items: center; justify-content: center; transition: opacity 1.2s var(--E-fluid); }
-        #intro.out { opacity: 0; pointer-events: none; }
-        #iw { font-size: 32px; color: #E8E2D8; opacity: 0; transition: 0.8s var(--E-mech); position: absolute; }
-        #iw.in { opacity: 1; }
-
-        nav { max-width: var(--max-w); margin: 0 auto; padding: 60px 50px; display: flex; justify-content: space-between; position: relative; z-index: 100; }
-        .logo { font-weight: 600; text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 12px; font-size: 17px; }
-        .l-pip { width: 7px; height: 7px; background: var(--teal); border-radius: 50%; }
-
-        .hero { max-width: var(--max-w); margin: 0 auto; padding: 80px 50px 140px; display: grid; grid-template-columns: 1fr 300px; gap: 100px; position: relative; }
-        #hc { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 3s var(--E-fluid); }
-        #hc.on { opacity: 1; }
-
-        h1 { font-size: clamp(40px, 8.5vw, 90px); line-height: 0.88; letter-spacing: -0.06em; font-weight: 400; margin: 30px 0; }
-        h1 em { font-style: italic; font-weight: 300; color: #888; }
-        .hero-sub { max-width: 440px; font-size: 18px; color: #aaa; margin-bottom: 50px; line-height: 1.5; }
-
-        .btn-elite { display: inline-block; font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--ink); text-decoration: none; border: 1px solid var(--b); padding: 16px 28px; transition: all 0.4s var(--E-mech); }
-        .btn-elite:hover { border-color: var(--teal); background: var(--teal); color: #fff; transform: translateY(-2px); }
-
-        .h-stat { border-top: 1px solid var(--b); padding: 40px 0; overflow: hidden; }
-        .h-stat-n { font-size: 40px; font-weight: 400; transform: translateY(110%); transition: transform 0.9s var(--E-mech); }
-        .sr.on .h-stat-n { transform: translateY(0); }
-        .h-stat-l { font-family: var(--mono); font-size: 8px; color: #666; text-transform: uppercase; margin-top: 12px; letter-spacing: 0.15em; }
-
-        .sr { opacity: 0; transition: opacity 2s var(--E-fluid); }
-        .sr.on { opacity: 1; }
-
-        .dark-section { background: #050708; color: #E8E2D8; padding: 160px 50px; border-top: 1px solid var(--b); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dida — Custom ML Engineering</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono&display=swap');
+:root {
+  --bg: #F3EFE4; --ink: #0c0c0c; --teal: #009595; --b: rgba(0,0,0,0.06); --dark: #090d10; 
+  --max-w: 1100px; --sans: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+  --E-fluid: cubic-bezier(0.19, 1, 0.22, 1); --E-mech: cubic-bezier(0.33, 1, 0.68, 1);
+}
+* { margin:0; padding:0; box-sizing:border-box; cursor: crosshair; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+#intro { position: fixed; inset: 0; z-index: 9999; background: #050708; display: flex; align-items: center; justify-content: center; transition: opacity 1.2s var(--E-fluid); }
+#intro.out { opacity: 0; pointer-events: none; }
+#iw { font-size: 32px; color: #E8E2D8; opacity: 0; transition: 0.8s var(--E-mech); position: absolute; }
+#iw.in { opacity: 1; }
+nav { max-width: var(--max-w); margin: 0 auto; padding: 60px 50px; display: flex; justify-content: space-between; position: relative; z-index: 100; }
+.logo { font-weight: 600; text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 12px; font-size: 17px; }
+.l-pip { width: 7px; height: 7px; background: var(--teal); border-radius: 50%; }
+.hero { max-width: var(--max-w); margin: 0 auto; padding: 80px 50px 140px; display: grid; grid-template-columns: 1fr 300px; gap: 100px; position: relative; }
+#hc { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 3s var(--E-fluid); }
+#hc.on { opacity: 1; }
+h1 { font-size: clamp(40px, 8.5vw, 90px); line-height: 0.88; letter-spacing: -0.06em; font-weight: 400; margin: 30px 0; }
+h1 em { font-style: italic; font-weight: 300; color: #4a4a4a; }
+.hero-sub { max-width: 440px; font-size: 18px; color: #555; margin-bottom: 50px; line-height: 1.5; }
+.btn-elite { display: inline-block; font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--ink); text-decoration: none; border: 1px solid var(--b); padding: 16px 28px; transition: all 0.4s var(--E-mech); }
+.btn-elite:hover { border-color: var(--ink); background: var(--ink); color: #fff; transform: translateY(-2px); }
+.h-stat { border-top: 1px solid var(--b); padding: 40px 0; overflow: hidden; }
+.h-stat-n { font-size: 40px; font-weight: 400; transform: translateY(110%); transition: transform 0.9s var(--E-mech); }
+.sr.on .h-stat-n { transform: translateY(0); }
+.h-stat-l { font-family: var(--mono); font-size: 8px; color: #999; text-transform: uppercase; margin-top: 12px; letter-spacing: 0.15em; }
+.sr { opacity: 0; transition: opacity 2s var(--E-fluid); }
+.sr.on { opacity: 1; }
+.dark-section { background: var(--dark); color: #E8E2D8; padding: 160px 50px; }
+</style>
 </head>
-<body>
 
+<body>
 <div id="intro"><span id="iw">Precision.</span></div>
 
 <nav>
   <a href="#" class="logo"><div class="l-pip"></div>dida</a>
-  <div style="font-family:var(--mono); font-size:9px; opacity:0.4; letter-spacing:0.2em;">SYSTEM_PROTOCOL: 200K_STABLE</div>
+  <div style="font-family:var(--mono); font-size:9px; opacity:0.4; letter-spacing:0.2em;">SYSTEM_PROTOCOL: ACTIVE</div>
 </nav>
 
 <header class="hero">
@@ -122,13 +108,13 @@ function draw(){
   t+=0.0035; 
   if(document.getElementById('hc').classList.contains('on')){ focusScale=Math.min(focusScale+0.0025, 1); } 
   ctx.clearRect(0,0,canvas.width,canvas.height); 
-  ctx.strokeStyle='rgba(0,149,149,0.3)'; 
-  ctx.lineWidth=0.8; 
-  for(let i=0; i<8; i++){ 
+  ctx.strokeStyle='rgba(0,149,149,0.22)'; 
+  ctx.lineWidth=0.7; 
+  for(let i=0; i<6; i++){ 
     ctx.beginPath(); 
-    for(let x=0; x<canvas.width/2; x+=10){ 
-      const amp=(1-focusScale)*110+10; 
-      const y=(canvas.height/10)+(i*12)+Math.sin(x*0.004+t+i)*amp; 
+    for(let x=0; x<canvas.width/2; x+=15){ 
+      const amp=(1-focusScale)*90+15; 
+      const y=(canvas.height/12)+(i*8)+Math.sin(x*0.003+t+i)*amp; 
       ctx.lineTo(x,y); 
     } 
     ctx.stroke(); 
