@@ -148,7 +148,7 @@ nav{
 .hero h1 .h-line{
   display:block;
   will-change:transform;
-  transform:translate3d(calc(var(--hx,0px) + var(--jx,0px)),calc(var(--hy,0px) + var(--jy,0px)),0);
+  transform:translate3d(var(--hx,0px),var(--hy,0px),0);
 }
 .hero h1 em{font-style:italic;font-weight:300;color:var(--ink-2);}
 .hero-sub{
@@ -513,31 +513,8 @@ nav{
 .hero-sys-text span{ color:var(--teal); opacity:0.7; }
 
 /* ── HERO SIGNAL LAYER ── */
-.hero-signal{
-  grid-column:1;grid-row:6;
-  display:flex;flex-wrap:wrap;gap:0 32px;
-  padding-bottom:32px;
-  opacity:0;
-  position:relative;z-index:1;
-}
-.hero.go .hero-signal{animation:rise 0.82s var(--E) 1.52s forwards;}
-.hs-row{
-  display:flex;align-items:baseline;gap:8px;
-  padding:3px 0;
-}
-.hs-key{
-  font-family:var(--mono);font-size:7.5px;
-  letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--ink-4);opacity:0.5;
-  white-space:nowrap;
-}
-.hs-val{
-  font-family:var(--mono);font-size:7.5px;
-  letter-spacing:0.08em;
-  color:var(--teal);opacity:0.7;
-  white-space:nowrap;
-  transition:opacity 0.4s linear;
-}
+
+.hero.go 
 
 /* ── SCROLL SECTION ENERGY ── */
 .sr{
@@ -545,7 +522,7 @@ nav{
 }
 /* sections dim very slightly when far from viewport center */
 .sr.on{
-  opacity:calc(0.88 + 0.12 * var(--scroll-vit));
+  opacity:calc(0.94 + 0.06 * var(--scroll-vit));
 }
 
 /* ── GLOBAL MOUSE GLOW (canvas overlay) ── */
@@ -564,43 +541,34 @@ nav{
   50%     { opacity:var(--amb-lo,0.48); }
 }
 .hero-sys-text{
-  animation:amb-drift 9s cubic-bezier(0.45,0,0.55,1) infinite;
-  --amb-hi:0.72;--amb-lo:0.56;
+  animation:amb-drift 14s cubic-bezier(0.45,0,0.55,1) infinite;
+  --amb-hi:0.58;--amb-lo:0.46;
   will-change:opacity;
   /* mouse reaction — set via JS */
   transform:translate(var(--ms-x,0px),var(--ms-y,0px));
   transition:transform 0.9s cubic-bezier(0.16,1,0.3,1);
 }
-.ds-item{
-  animation:amb-drift 12s cubic-bezier(0.45,0,0.55,1) infinite;
-  --amb-hi:0.65;--amb-lo:0.52;
-}
-.ds-item:nth-child(2){ animation-delay:-3s; }
-.ds-item:nth-child(4){ animation-delay:-6s; }
-.ds-item:nth-child(6){ animation-delay:-9s; }
+.ds-item{ /* static */ }
 .foot-loc{
-  animation:amb-drift 14s cubic-bezier(0.45,0,0.55,1) infinite;
-  --amb-hi:0.55;--amb-lo:0.38;
-  animation-delay:-5s;
-}
+  }
 
 /* ── SCROLL ENERGY ── */
 /* --energy updated by JS: 0 (top) → 1 (mid-scroll) → 0 (bottom) */
 :root{ --energy:0; }
 .hero{
-  filter:brightness(calc(1 + var(--energy) * 0.04));
+  filter:brightness(calc(1 + var(--energy) * 0.025));
   transition:filter 0.6s linear;
 }
 #darkBand{
-  filter:brightness(calc(1 + var(--energy) * 0.06));
+  filter:brightness(calc(1 + var(--energy) * 0.035));
   transition:filter 0.6s linear;
 }
 .process{
-  filter:brightness(calc(1 + var(--energy) * 0.03));
+  filter:brightness(calc(1 + var(--energy) * 0.018));
   transition:filter 0.6s linear;
 }
 .proof{
-  filter:brightness(calc(1 + var(--energy) * 0.03));
+  filter:brightness(calc(1 + var(--energy) * 0.018));
   transition:filter 0.6s linear;
 }
 
@@ -699,13 +667,8 @@ footer{border-top:1px solid var(--b);max-width:var(--w);margin:0 auto;padding:24
   </div>
   <div class="hero-sys">
     <span class="hero-sys-dot"></span>
-    <span class="hero-sys-text" id="heroSysText">nominal · loss ↓ <span id="sysLoss">0.0184</span> · latency <span id="sysLat">38ms</span> · <span id="heroDate"></span></span>
+    <span class="hero-sys-text" id="heroSysText">nominal · <span id="heroDate"></span></span></span>
   </div>
-  <div class="hero-signal" id="heroSignal">
-    <div class="hs-row"><span class="hs-key">loss</span><span class="hs-val" id="hsLoss">—</span></div>
-    <div class="hs-row"><span class="hs-key">latency p95</span><span class="hs-val" id="hsLatency">—</span></div>
-    <div class="hs-row"><span class="hs-key">drift</span><span class="hs-val" id="hsDrift">—</span></div>
-    <div class="hs-row"><span class="hs-key">uptime</span><span class="hs-val" id="hsUptime">—</span></div>
   </div>
   <aside class="hero-aside">
     <div class="h-stat">
@@ -1154,46 +1117,50 @@ function createField(canvasId, cfg){
   const canvas = document.getElementById('ic');
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  const C = '0,138,138';
+  const C = '0,136,136';
   let W, H, cx, cy, raf, alive = true, t0 = null;
 
-  const DUR  = 680;
-  const WORD = 640;
-  const DONE = 920;
+  /* ~0.85s total */
+  const DUR  = 520;
+  const WORD = 490;
+  const DONE = 780;
 
-  const eIn3 = t => t * t * t;
-  const eOut = t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  const eIn4 = t => 1 - Math.pow(1-t, 4);  /* hard pull into center */
+  const eOut = t => t >= 1 ? 1 : 1 - Math.pow(2, -10*t);
   const cl   = (v,a,b) => Math.max(a, Math.min(b, v));
 
+  /* 6 lines — irregular angles, not a radar */
+  const ANGLES = [0.22, 1.08, 1.74, 2.85, 3.88, 5.20];
   let lines = [];
+
   function build(){
     lines = [];
     const dist = Math.max(W, H) * 0.68;
-    for(let i = 0; i < 12; i++){
-      const angle = (i / 12) * Math.PI * 2;
+    ANGLES.forEach((a, i) => {
       lines.push({
-        ox:    cx + Math.cos(angle) * dist,
-        oy:    cy + Math.sin(angle) * dist,
-        op:    0.18 + (i % 3) * 0.10,
-        w:     0.45 + (i % 2) * 0.18,
-        delay: i < 6 ? 0 : 55,
+        ox:    cx + Math.cos(a) * dist,
+        oy:    cy + Math.sin(a) * dist,
+        op:    0.10 + (i % 3) * 0.06,   /* max 0.22 — restrained */
+        w:     0.30 + (i % 2) * 0.15,   /* thin: 0.30–0.45px */
+        delay: i * 18,
       });
-    }
+    });
   }
 
   function draw(e){
     ctx.clearRect(0, 0, W, H);
+
     for(const l of lines){
       const t  = e - l.delay;
       if(t <= 0) continue;
       const p  = cl(t / DUR, 0, 1);
-      const ep = eIn3(p);
+      const ep = eIn4(p);
       const tx = l.ox + (cx - l.ox) * ep;
       const ty = l.oy + (cy - l.oy) * ep;
       const g  = ctx.createLinearGradient(l.ox, l.oy, tx, ty);
-      g.addColorStop(0,   `rgba(${C},0)`);
-      g.addColorStop(0.3, `rgba(${C},${l.op * 0.2})`);
-      g.addColorStop(1,   `rgba(${C},${l.op})`);
+      g.addColorStop(0,    `rgba(${C},0)`);
+      g.addColorStop(0.2,  `rgba(${C},${l.op * 0.1})`);
+      g.addColorStop(1,    `rgba(${C},${l.op})`);
       ctx.strokeStyle = g;
       ctx.lineWidth   = l.w;
       ctx.lineCap     = 'butt';
@@ -1202,20 +1169,22 @@ function createField(canvasId, cfg){
       ctx.lineTo(tx, ty);
       ctx.stroke();
     }
+
+    /* minimal center convergence — just a soft point, no flare */
     const p  = cl(e / DUR, 0, 1);
-    const ep = eOut(p);
     const lT = Math.max(0, e - DUR);
-    const fl = lT > 0 ? Math.max(0, 1 - eOut(cl(lT/160,0,1))) * 0.25 : 0;
-    const r  = 2 + ep*14 + fl*18;
-    const a  = ep*ep*0.09 + fl;
-    const rg = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-    rg.addColorStop(0,   `rgba(${C},${Math.min(a*4,0.82)})`);
-    rg.addColorStop(0.4, `rgba(${C},${a*0.8})`);
-    rg.addColorStop(1,   `rgba(${C},0)`);
-    ctx.fillStyle = rg;
-    ctx.beginPath();
-    ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.fill();
+    const fl = lT > 0 ? Math.max(0, 1 - eOut(cl(lT/130, 0, 1))) * 0.14 : 0;
+    const a  = eOut(p)*eOut(p)*0.055 + fl;
+    if(a > 0.004){
+      const r  = 1 + eOut(p)*8 + fl*10;
+      const rg = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+      rg.addColorStop(0, `rgba(${C},${Math.min(a*3.5,0.60)})`);
+      rg.addColorStop(1, `rgba(${C},0)`);
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.fill();
+    }
   }
 
   let wordFired = false;
@@ -1224,7 +1193,11 @@ function createField(canvasId, cfg){
     if(!t0) t0 = ts;
     const e = ts - t0;
     draw(e);
-    if(!wordFired && e >= WORD){ wordFired=true; const w=document.getElementById('introWord'); if(w) w.classList.add('on'); }
+    if(!wordFired && e >= WORD){
+      wordFired = true;
+      const w = document.getElementById('introWord');
+      if(w) w.classList.add('on');
+    }
     raf = requestAnimationFrame(frame);
   }
   function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; cx=W/2; cy=H/2; build(); }
@@ -1239,11 +1212,11 @@ const heroField = createField('hc', {
   corners:false,cross:false,parallax:true,
   converge:true,startupBoost:true,focusable:true,hotspot:true,
   lines:[
-    {yF:0.38,spd:0.000015,ph:0,  amp:0.022,op:0.08,w:1,  parallaxAmp:0.05},
-    {yF:0.52,spd:0.000009,ph:2.2,amp:0.012,op:0.04,w:0.9,parallaxAmp:0.03},
-    {yF:0.45,spd:0.000006,ph:4.6,amp:0.007,op:0.025,w:0.7,parallaxAmp:0.02},
+    {yF:0.38,spd:0.000015,ph:0,  amp:0.020,op:0.065,w:0.9,parallaxAmp:0.04},
+    {yF:0.52,spd:0.000009,ph:2.2,amp:0.010,op:0.032,w:0.8,parallaxAmp:0.02},
+    {yF:0.45,spd:0.000006,ph:4.6,amp:0.006,op:0.018,w:0.6,parallaxAmp:0.02},
   ],
-  nodes:[{x:0.35,yF:0.38,vx:0.000018,ph:0.3,r:1.5,op:0.3}]
+  nodes:[{x:0.35,yF:0.38,vx:0.000018,ph:0.3,r:1.2,op:0.22}]
 });
 
 const darkField = createField('dc', {
@@ -1503,141 +1476,7 @@ runIntro();
   update();
 })();
 
-/* ── HERO SYS MOUSE AWARENESS ── */
-(function(){
-  const el = document.getElementById('heroSysText');
-  if(!el) return;
-  let tx = 0, ty = 0;
-  window.addEventListener('mousemove', e => {
-    /* map cursor to ±2px range — extremely subtle */
-    const nx = (e.clientX / window.innerWidth  - 0.5);
-    const ny = (e.clientY / window.innerHeight - 0.5);
-    tx = (nx * 3).toFixed(2);
-    ty = (ny * 1.5).toFixed(2);
-    el.style.setProperty('--ms-x', tx + 'px');
-    el.style.setProperty('--ms-y', ty + 'px');
-  }, {passive:true});
-})();
-
-/* ── CLUSTERED SIGNAL UPDATES ── */
-(function(){
-  /* hero signal block — hsLoss / hsLatency / hsDrift / hsUptime */
-  let loss    = 0.0412, latency = 38, drift = 0.0021, uptime = 99.97;
-  const hsLoss    = document.getElementById('hsLoss');
-  const hsLatency = document.getElementById('hsLatency');
-  const hsDrift   = document.getElementById('hsDrift');
-  const hsUptime  = document.getElementById('hsUptime');
-  const els  = [hsLoss, hsLatency, hsDrift, hsUptime];
-  const REVEAL_DELAY = [0, 180, 360, 540];
-  let revealed = [false,false,false,false];
-
-  /* initial staggered reveal */
-  setTimeout(()=>{
-    els.forEach((el,i)=>{
-      if(!el) return;
-      setTimeout(()=>{
-        revealed[i]=true;
-        el.style.opacity='0';
-        setTimeout(()=>{
-          if(!el) return;
-          el.textContent = fmt(i);
-          el.style.opacity='0.7';
-        }, 40);
-      }, REVEAL_DELAY[i]);
-    });
-  }, 1600);
-
-  function fmt(i){
-    if(i===0) return loss.toFixed(4);
-    if(i===1) return latency.toFixed(1)+' ms';
-    if(i===2) return drift < 0.001 ? '< 0.001' : drift.toFixed(4);
-    return uptime.toFixed(2)+'%';
-  }
-
-  function flash(el, val){
-    if(!el) return;
-    el.style.opacity='0.2';
-    setTimeout(()=>{ el.textContent=val; el.style.opacity='0.7'; }, 80);
-  }
-
-  function burst(){
-    const steps = 3 + Math.floor(Math.random()*4);
-    for(let i=0;i<steps;i++){
-      setTimeout(()=>{
-        loss    += (Math.random()-0.5)*0.0008;
-        latency += (Math.random()-0.5)*2.2;
-        drift   += (Math.random()-0.5)*0.0004;
-        uptime  += (Math.random()-0.5)*0.008;
-        /* clamp to realistic ranges */
-        loss    = Math.max(0.003, Math.min(0.09,  loss));
-        latency = Math.max(18,    Math.min(80,     latency));
-        drift   = Math.max(0.0005,Math.min(0.006,  drift));
-        uptime  = Math.max(99.5,  Math.min(100,    uptime));
-        if(revealed[0]) flash(hsLoss,    loss.toFixed(4));
-        if(revealed[1]) flash(hsLatency, Math.round(latency)+'ms');
-        if(revealed[2]) flash(hsDrift, drift.toFixed(4));
-        if(revealed[3]) flash(hsUptime,  uptime.toFixed(2)+'%');
-      }, i*(40+Math.random()*60));
-    }
-    setTimeout(burst, 1200+Math.random()*2800);
-  }
-  setTimeout(burst, 4400);
-
-  /* hero sys text (sysLoss / sysLat) — same burst rhythm */
-  const sysLoss = document.getElementById('sysLoss');
-  const sysLat  = document.getElementById('sysLat');
-  let sl = 0.0184, slt = 38;
-  function sysBurst(){
-    const steps = 2+Math.floor(Math.random()*3);
-    for(let i=0;i<steps;i++){
-      setTimeout(()=>{
-        sl  += (Math.random()-0.5)*0.0006;
-        slt += (Math.random()-0.5)*1.8;
-        sl  = Math.max(0.004, Math.min(0.05, sl));
-        slt = Math.max(22,    Math.min(68,   slt));
-        if(sysLoss) sysLoss.textContent = sl.toFixed(4);
-        if(sysLat)  sysLat.textContent  = Math.round(slt)+'ms';
-      }, i*(35+Math.random()*50));
-    }
-    setTimeout(sysBurst, 1800+Math.random()*3200);
-  }
-  setTimeout(sysBurst, 5200);
-})();
-
-/* ── RARE HEADLINE INSTABILITY ── */
-(function(){
-  const lines = document.querySelectorAll('.h-line');
-  if(!lines.length) return;
-  function pulse(){
-    lines.forEach(l=>{
-      /* use --jx/--jy so parallax (--hx/--hy) is unaffected */
-      const jx = ((Math.random()-0.5)*0.7).toFixed(2);
-      const jy = ((Math.random()-0.5)*0.4).toFixed(2);
-      l.style.setProperty('--jx', jx+'px');
-      l.style.setProperty('--jy', jy+'px');
-      setTimeout(()=>{
-        l.style.setProperty('--jx','0px');
-        l.style.setProperty('--jy','0px');
-      }, 100+Math.random()*80);
-    });
-    setTimeout(pulse, 4000+Math.random()*6000);
-  }
-  setTimeout(pulse, 3500);
-})();
-
-/* ── SYSTEM HESITATION ── */
-(function(){
-  const sys = document.getElementById('heroSysText');
-  if(!sys) return;
-  function hesitate(){
-    if(Math.random()<0.28){
-      sys.style.opacity='0.32';
-      setTimeout(()=>{ sys.style.opacity=''; }, 160+Math.random()*180);
-    }
-    setTimeout(hesitate, 3000+Math.random()*4500);
-  }
-  setTimeout(hesitate, 5000);
-})();
+/* signal updates removed */
 
 /* ── SCROLL SECTION VITALITY ── */
 /* ── SCROLL SECTION VITALITY ── */
@@ -1691,8 +1530,8 @@ runIntro();
 
     /* very subtle warm glow that follows the cursor */
     const rg = ctx.createRadialGradient(mx, my, 0, mx, my, 280);
-    rg.addColorStop(0,   'rgba(0,146,146,0.022)');
-    rg.addColorStop(0.4, 'rgba(0,146,146,0.008)');
+    rg.addColorStop(0,   'rgba(0,146,146,0.015)');
+    rg.addColorStop(0.4, 'rgba(0,146,146,0.005)');
     rg.addColorStop(1,   'rgba(0,146,146,0)');
     ctx.fillStyle = rg;
     ctx.fillRect(0, 0, W, H);
