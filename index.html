@@ -5,157 +5,171 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dida — Machine Learning for Real-World Complexity</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap');
 
 :root{
-  --bg:#FAF7F2; /* Colder, clinical lab white */
-  --ink:#0b0b0b;
-  --ink-2:#282828;
-  --ink-3:#727272;
-  --ink-4:#797979;
-  --teal:#009292;
-  --b:rgba(0,0,0,0.06); /* Harder borders */
-  --dark:#08090c;
-  --dark-ink:#EAE4D8;
-  --sans:'Inter',-apple-system,sans-serif;
-  --mono:'JetBrains Mono',monospace;
-  --E:cubic-bezier(0.2, 0, 0, 1); /* Mechanical easing */
-  --w:1120px; --g:64px;
+  --bg:#FAF7F2; --ink:#0b0b0b; --ink-2:#282828; --ink-3:#727272; --ink-4:#797979;
+  --teal:#009292; --b:rgba(0,0,0,0.06); --dark:#050708; --dark-ink:#EAE4D8;
+  --sans:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+  --E:cubic-bezier(0.2, 0, 0, 1); --w:1120px; --g:64px;
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;shape-rendering:crispEdges;}
-
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Grain_Texture.png');opacity:0.02;pointer-events:none;z-index:9000;}
 
-/* INTRO */
-.intro{position:fixed;inset:0;z-index:9999;background:#050708;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.intro.out{opacity:0;transition:opacity 0.8s var(--E);pointer-events:none;}
-.iw{position:absolute;font-size:32px;color:#d4cfc3;opacity:0;transform:translateY(10px);transition:all 0.5s var(--E);}
-.iw.in{opacity:1;transform:none;}
-.iw em{font-style:italic;color:var(--teal);font-weight:300;}
+/* 1M DOLLAR INTRO */
+.intro {
+  position: fixed; inset: 0; z-index: 9999; background: #050708; color: #d4cfc3;
+  display: flex; align-items: center; justify-content: center; font-family: var(--mono); cursor: none;
+}
+.i-meta { position: absolute; top: 40px; left: 40px; display: flex; flex-direction: column; gap: 8px; }
+.i-log { font-size: 7px; color: var(--teal); opacity: 0.5; height: 40px; overflow: hidden; line-height: 1.4; }
+.i-status { font-size: 9px; letter-spacing: 0.2em; display: flex; align-items: center; gap: 10px; }
+.status-pip { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; box-shadow: 0 0 8px var(--teal); animation: blink 2s infinite; }
+.i-center { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.iw { font-size: 14px; letter-spacing: 0.4em; text-transform: uppercase; opacity: 0; transition: opacity 0.3s ease; }
+.iw.in { opacity: 1; }
+.i-progress-wrap { width: 140px; height: 1px; background: rgba(255,255,255,0.1); position: relative; }
+.i-progress-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--teal); width: 0%; transition: width 0.2s linear; }
+.i-ver { position: absolute; bottom: 40px; right: 40px; font-size: 8px; opacity: 0.3; letter-spacing: 0.1em; }
+.intro.out { transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1); }
 
-/* NAV */
-nav{max-width:var(--w);margin:0 auto;padding:42px var(--g);display:flex;justify-content:space-between;align-items:center;opacity:0;}
-nav.on{opacity:1;transition:opacity 1s var(--E) 0.8s;}
-.logo{font-family:var(--mono);font-size:14px;font-weight:600;text-transform:lowercase;letter-spacing:-0.02em;text-decoration:none;color:var(--ink);}
+/* NAV & HERO */
+nav{max-width:var(--w);margin:0 auto;padding:42px var(--g);display:flex;justify-content:space-between;opacity:0;}
+nav.on{opacity:1;transition:opacity 1s var(--E) 0.5s;}
+.logo{font-family:var(--mono);font-size:13px;font-weight:600;text-decoration:none;color:var(--ink);}
 
-/* HERO */
 .hero{max-width:var(--w);margin:0 auto;padding:120px var(--g) 80px;display:grid;grid-template-columns:1fr 320px;gap:80px;position:relative;}
-#hc{position:absolute;top:0;left:0;pointer-events:none;z-index:0;opacity:0;filter:blur(0.4px);transition:opacity 2s var(--E);}
+#hc{position:absolute;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 2s var(--E);}
 #hc.on{opacity:1;}
-
 .hero h1{font-size:clamp(54px,8vw,92px);font-weight:500;letter-spacing:-0.06em;line-height:0.85;margin-bottom:40px;opacity:0;transform:translateY(20px);}
-.hero-sub{font-size:18px;line-height:1.6;color:var(--ink-2);max-width:38ch;margin-bottom:48px;opacity:0;transform:translateY(15px);}
-.hero-aside{border-left:1px solid var(--b);padding-left:48px;opacity:0;transform:translateX(10px);}
+.hero-sub{font-size:18px;line-height:1.6;color:var(--ink-2);max-width:38ch;opacity:0;transform:translateY(15px);}
+.hero-aside{border-left:1px solid var(--b);padding-left:48px;opacity:0;}
+.hero.on h1, .hero.on .hero-sub, .hero.on .hero-aside { opacity:1; transform:none; transition:all 0.8s var(--E) 0.4s; }
 
-.hero.on h1{opacity:1;transform:none;transition:all 0.8s var(--E) 0.6s;}
-.hero.on .hero-sub{opacity:1;transform:none;transition:all 0.8s var(--E) 0.75s;}
-.hero.on .hero-aside{opacity:1;transform:none;transition:all 0.8s var(--E) 0.9s;}
-
-/* SYSTEM SNAPSHOT (THE ANCHOR) */
+/* SYSTEM SNAPSHOT */
 .sys-snapshot{margin-bottom:140px;}
 .sys-grid{display:grid;grid-template-columns:repeat(4, 1fr);border:1px solid var(--b);background:rgba(0,0,0,0.01);}
 .sys-col{padding:32px;border-right:1px solid var(--b);}
 .sys-col:last-child{border-right:none;}
 .ey{font-family:var(--mono);font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:12px;}
-.sys-val{font-family:var(--mono);font-size:17px;color:var(--ink);margin-top:8px;}
-.sys-status{font-family:var(--mono);font-size:10px;display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--teal);}
-.status-pip{width:5px;height:5px;background:var(--teal);border-radius:50%;box-shadow:0 0 8px var(--teal);animation:blink 2s infinite;}
+.sys-val{font-family:var(--mono);font-size:16px;color:var(--ink);}
 
-@keyframes blink{0%,100%{opacity:1;} 50%{opacity:0.3;}}
-
-/* SECTIONS */
+/* REVEALS */
 .sr{opacity:0;transform:translateY(20px);transition:all 0.7s var(--E);}
 .sr.on{opacity:1;transform:none;}
 .w{max-width:var(--w);margin:0 auto;padding:0 var(--g);}
 .h2{font-size:42px;font-weight:500;letter-spacing:-0.04em;line-height:1;margin-bottom:60px;}
 
-.dark-band{background:var(--dark);padding:140px 0;color:var(--dark-ink);margin-top:140px;}
-.dc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);}
-.dc-card{background:var(--dark);padding:48px;}
-
+@keyframes blink{0%,100%{opacity:1;} 50%{opacity:0.3;}}
 footer{padding:60px var(--g);max-width:var(--w);margin:0 auto;border-top:1px solid var(--b);font-family:var(--mono);font-size:8px;color:var(--ink-4);display:flex;justify-content:space-between;}
 </style>
 </head>
 <body>
 
 <div class="intro" id="intro">
-  <span class="iw" id="iw">Precision.</span>
+  <div class="i-meta">
+    <div class="i-log" id="i-log"></div>
+    <div class="i-status"><span class="status-pip"></span> SYS_BOOT_ACTIVE</div>
+  </div>
+  <div class="i-center">
+    <div class="i-stage"><span class="iw" id="iw">Initializing_</span></div>
+    <div class="i-progress-wrap"><div class="i-progress-bar" id="i-bar"></div></div>
+  </div>
+  <div class="i-ver">DIDA_INTELLIGENCE // KERNEL_3.4.0</div>
 </div>
 
 <nav id="nav">
-  <a href="#" class="logo">dida // system_v3.4</a>
-  <div style="font-family:var(--mono); font-size:9px; letter-spacing:0.1em; color:var(--ink-3);">[ APPROACH ] [ CASES ] [ RESEARCH ]</div>
+  <a href="#" class="logo">dida // core</a>
+  <div style="font-family:var(--mono); font-size:9px; letter-spacing:0.1em; opacity:0.6;">[ APPROACH ] [ CASES ] [ RESEARCH ]</div>
 </nav>
 
 <header class="hero" id="hero">
   <canvas id="hc"></canvas>
-  <div class="hero-main">
-    <span class="ey">Engineering Intelligence</span>
+  <div>
+    <span class="ey">Custom Machine Learning</span>
     <h1>Built for the<br>problem you<br><em>actually have.</em></h1>
-    <p class="hero-sub">We engineer machine learning systems for the specific constraints, high-stakes data, and industrial demands of your operation.</p>
+    <p class="hero-sub">We engineer precision intelligence systems for high-stakes enterprise data and industrial operations.</p>
   </div>
   <aside class="hero-aside">
-    <div style="margin-bottom:48px;">
-      <div style="font-size:32px; font-weight:500;">32<sup>+</sup></div>
-      <span class="ey">Core Engineers</span>
-    </div>
-    <div>
-      <div style="font-size:32px; font-weight:500;">PhD<sup>s</sup></div>
-      <span class="ey">Research Depth</span>
-    </div>
+    <div style="margin-bottom:48px;"><div style="font-size:32px; font-weight:500;">32<sup>+</sup></div><span class="ey">Engineers</span></div>
+    <div><div style="font-size:32px; font-weight:500;">PhD<sup>s</sup></div><span class="ey">Research Depth</span></div>
   </aside>
 </header>
 
 <section class="sys-snapshot w sr">
   <div class="sys-grid">
-    <div class="sys-col"><span class="ey">Environment</span><div class="sys-val">Production_v4.2</div></div>
-    <div class="sys-col"><span class="ey">Inference</span><div class="sys-val">14.2ms <small style="font-size:9px;opacity:0.5;">AVG</small></div></div>
-    <div class="sys-col"><span class="ey">Architecture</span><div class="sys-val">Transformer_Bespoke</div></div>
-    <div class="sys-col">
-      <span class="ey">Status</span>
-      <div class="sys-status"><div class="status-pip"></div> NOMINAL_LOCK</div>
-    </div>
+    <div class="sys-col"><span class="ey">Live Nodes</span><div class="sys-val">Active_v4.2</div></div>
+    <div class="sys-col"><span class="ey">Inference</span><div class="sys-val">14.2ms <small style="opacity:0.4;">AVG</small></div></div>
+    <div class="sys-col"><span class="ey">Topology</span><div class="sys-val">Transformer_Custom</div></div>
+    <div class="sys-col"><span class="ey">System Status</span><div class="sys-val" style="color:var(--teal);">● NOMINAL</div></div>
   </div>
 </section>
 
 <section class="w sr">
-  <span class="ey">The Methodology</span>
+  <span class="ey">Methodology</span>
   <h2 class="h2">Research-grade engineering.<br>Industrial reliability.</h2>
-  <div class="dc-grid">
-    <div class="dc-card">
-      <h3 style="font-weight:400;margin-bottom:16px;">Mathematical Rigor</h3>
-      <p style="font-size:14px;line-height:1.6;opacity:0.6;">We publish at the boundary of applied and theoretical ML to ensure every model is built on verified first principles.</p>
-    </div>
-    <div class="dc-card">
-      <h3 style="font-weight:400;margin-bottom:16px;">Production Depth</h3>
-      <p style="font-size:14px;line-height:1.6;opacity:0.6;">Closing the gap between notebook prototypes and scalable, monitored production environments.</p>
-    </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--b); border:1px solid var(--b);">
+    <div style="background:var(--bg); padding:48px;"><h3 style="font-weight:400;margin-bottom:16px;">Mathematical Rigor</h3><p style="font-size:14px;line-height:1.6;opacity:0.6;">We build on verified first principles to ensure production stability.</p></div>
+    <div style="background:var(--bg); padding:48px;"><h3 style="font-weight:400;margin-bottom:16px;">Production Depth</h3><p style="font-size:14px;line-height:1.6;opacity:0.6;">Closing the gap between prototype notebooks and enterprise MLOps.</p></div>
   </div>
 </section>
 
-<div class="dark-band sr">
-  <div class="w">
-    <span class="ey">Proof of Deployment</span>
-    <h2 class="h2" style="color:#fff;">Validated by Industry.</h2>
-    <div style="display:flex; gap:60px; opacity:0.5; font-family:var(--mono); font-size:11px;">
-      <span>SIEMENS</span><span>ZEISS</span><span>ESA</span><span>DEUTSCHE BAHN</span>
-    </div>
-  </div>
-</div>
-
 <footer>
-  <div>DIDA MACHINE LEARNING // BERLIN</div>
-  <div>© 2026 INTERNAL_DOCS</div>
+  <div>DIDA // BERLIN RESEARCH LAB</div>
+  <div>© 2026 // SYSTEM_STABLE</div>
 </footer>
 
 <script>
-/* ── MECHANICAL SIGNAL ENGINE ── */
+/* ── ELITE INTRO LOGIC ── */
+const words = ['Establishing_Link', 'Scanning_Drift', 'Optimizing_Tensors', 'Dida_Systems'];
+const logEl = document.getElementById('i-log');
+const bar = document.getElementById('i-bar');
+const iw = document.getElementById('iw');
+let wordIdx = 0;
+
+function updateLogs() {
+  const hex = () => Math.random().toString(16).slice(2, 7).toUpperCase();
+  const line = `> AUTH_CHECK: 0x${hex()}.. OK <br>`;
+  logEl.innerHTML = (line + logEl.innerHTML).split('<br>').slice(0, 4).join('<br>');
+}
+
+function runIntro() {
+  const logInt = setInterval(updateLogs, 120);
+  function nextWord() {
+    if (wordIdx >= words.length) {
+      clearInterval(logInt);
+      bar.style.width = '100%';
+      setTimeout(() => {
+        document.getElementById('intro').classList.add('out');
+        initPage();
+      }, 500);
+      return;
+    }
+    iw.innerHTML = words[wordIdx]; iw.classList.add('in');
+    bar.style.width = ((wordIdx + 1) / words.length) * 100 + '%';
+    setTimeout(() => {
+      if(wordIdx < words.length - 1) iw.classList.remove('in');
+      wordIdx++;
+      setTimeout(nextWord, 300);
+    }, 1100);
+  }
+  nextWord();
+}
+
+/* ── SIGNAL ENGINE ── */
 const canvas = document.getElementById('hc');
 const ctx = canvas.getContext('2d');
-let W, H, raf, alive = false, t = 0;
-let drift = 0, lastBurst = 0;
+let W, H, raf, alive = false, drift = 0, lastBurst = 0;
+
+function initPage() {
+  document.getElementById('nav').classList.add('on');
+  document.getElementById('hero').classList.add('on');
+  document.getElementById('hc').classList.add('on');
+  alive = true; resize(); raf = requestAnimationFrame(draw);
+  document.querySelectorAll('.sr').forEach(s => obs.observe(s));
+}
 
 function resize() {
   const r = canvas.parentElement.getBoundingClientRect();
@@ -165,60 +179,21 @@ function resize() {
 function draw(ts) {
   if(!alive) return;
   ctx.clearRect(0,0,W,H);
-
-  if(ts - lastBurst > 2800) {
-    drift = (Math.random() - 0.5) * 40;
-    lastBurst = ts;
-  }
-
-  let y = H * 0.4 + (drift * Math.sin(ts * 0.001));
-  ctx.strokeStyle = `rgba(0,146,146,${0.12 + Math.random()*0.04})`;
+  if(ts - lastBurst > 3000) { drift = (Math.random()-0.5)*30; lastBurst = ts; }
+  let y = H * 0.45 + (drift * Math.sin(ts * 0.001));
+  ctx.strokeStyle = `rgba(0,146,146,${0.12 + Math.random()*0.05})`;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, y);
-  ctx.lineTo(W * 0.4, y);
-  ctx.lineTo(W * 0.45, y - 8);
-  ctx.lineTo(W * 0.55, y - 8);
-  ctx.lineTo(W * 0.6, y);
-  ctx.lineTo(W, y);
+  ctx.moveTo(0, y); ctx.lineTo(W*0.4, y); ctx.lineTo(W*0.45, y-8); ctx.lineTo(W*0.55, y-8); ctx.lineTo(W*0.6, y); ctx.lineTo(W, y);
   ctx.stroke();
-
-  ctx.font = "8px 'JetBrains Mono'";
-  ctx.fillStyle = "rgba(0,146,146,0.3)";
-  ctx.fillText(`SYS_DRIFT: ${drift.toFixed(4)}`, 20, y - 15);
-  ctx.fillText(`ID_STATE: ${Math.random().toString(16).slice(2,8)}`, W-100, y + 20);
-
+  ctx.font = "7px 'JetBrains Mono'"; ctx.fillStyle = "rgba(0,146,146,0.4)";
+  ctx.fillText(`SIG_DRIFT: ${drift.toFixed(3)}`, 20, y-12);
   raf = requestAnimationFrame(draw);
 }
 
-/* ── INTRO SEQUENCE ── */
-const intro = document.getElementById('intro');
-const iw = document.getElementById('iw');
-const words = ['Precision.', 'Research.', '<em>Custom</em> ML.'];
-let idx = 0;
-
-function cycle() {
-  if(idx >= words.length) {
-    intro.classList.add('out');
-    setTimeout(() => {
-      document.getElementById('nav').classList.add('on');
-      document.getElementById('hero').classList.add('on');
-      document.getElementById('hc').classList.add('on');
-      alive = true; resize(); raf = requestAnimationFrame(draw);
-      document.querySelectorAll('.sr').forEach(s => obs.observe(s));
-    }, 500); // The "Pause of Authority"
-    return;
-  }
-  iw.innerHTML = words[idx]; iw.classList.add('in');
-  setTimeout(() => { iw.classList.remove('in'); idx++; setTimeout(cycle, 400); }, 1000);
-}
-
-const obs = new IntersectionObserver(es => es.forEach(e => {
-  if(e.isIntersecting) e.target.classList.add('on');
-}), {threshold: 0.1});
-
+const obs = new IntersectionObserver(es => es.forEach(e => {if(e.isIntersecting) e.target.classList.add('on')}), {threshold: 0.1});
 window.addEventListener('resize', resize);
-setTimeout(cycle, 500);
+runIntro();
 </script>
 </body>
 </html>
