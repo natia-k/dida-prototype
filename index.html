@@ -18,7 +18,7 @@
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Grain_Texture.png');opacity:0.02;pointer-events:none;z-index:9000;}
 
-/* 1M DOLLAR INTRO */
+/* ELITE INITIALIZATION SEQUENCE */
 .intro {
   position: fixed; inset: 0; z-index: 9999; background: #050708; color: #d4cfc3;
   display: flex; align-items: center; justify-content: center; font-family: var(--mono); cursor: none;
@@ -35,35 +35,35 @@ body::before{content:'';position:fixed;inset:0;background-image:url('https://upl
 .i-ver { position: absolute; bottom: 40px; right: 40px; font-size: 8px; opacity: 0.3; letter-spacing: 0.1em; }
 .intro.out { transform: translateY(-100%); transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1); }
 
-/* NAV & HERO */
+/* NAV & HERO SYSTEM */
 nav{max-width:var(--w);margin:0 auto;padding:42px var(--g);display:flex;justify-content:space-between;opacity:0;}
 nav.on{opacity:1;transition:opacity 1s var(--E) 0.5s;}
-.logo{font-family:var(--mono);font-size:13px;font-weight:600;text-decoration:none;color:var(--ink);}
+.logo{font-family:var(--mono);font-size:13px;font-weight:600;text-decoration:none;color:var(--ink);letter-spacing: -0.02em;}
 
 .hero{max-width:var(--w);margin:0 auto;padding:120px var(--g) 80px;display:grid;grid-template-columns:1fr 320px;gap:80px;position:relative;}
-#hc{position:absolute;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 2s var(--E);}
+#hc{position:absolute;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 2s var(--E); z-index: -1;}
 #hc.on{opacity:1;}
 .hero h1{font-size:clamp(54px,8vw,92px);font-weight:500;letter-spacing:-0.06em;line-height:0.85;margin-bottom:40px;opacity:0;transform:translateY(20px);}
 .hero-sub{font-size:18px;line-height:1.6;color:var(--ink-2);max-width:38ch;opacity:0;transform:translateY(15px);}
 .hero-aside{border-left:1px solid var(--b);padding-left:48px;opacity:0;}
 .hero.on h1, .hero.on .hero-sub, .hero.on .hero-aside { opacity:1; transform:none; transition:all 0.8s var(--E) 0.4s; }
 
-/* SYSTEM SNAPSHOT */
-.sys-snapshot{margin-bottom:140px;}
+/* SYSTEM SNAPSHOT (PREVENTS EMPTY FEEL) */
+.sys-snapshot{margin-bottom:140px; margin-top: -20px;}
 .sys-grid{display:grid;grid-template-columns:repeat(4, 1fr);border:1px solid var(--b);background:rgba(0,0,0,0.01);}
-.sys-col{padding:32px;border-right:1px solid var(--b);}
+.sys-col{padding:32px; border-right:1px solid var(--b);}
 .sys-col:last-child{border-right:none;}
-.ey{font-family:var(--mono);font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:12px;}
-.sys-val{font-family:var(--mono);font-size:16px;color:var(--ink);}
+.ey{font-family:var(--mono);font-size:8px;letter-spacing:0.38em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:12px;}
+.sys-val{font-family:var(--mono);font-size:16px;color:var(--ink); letter-spacing: -0.02em;}
 
-/* REVEALS */
+/* SECTIONS & REVEALS */
 .sr{opacity:0;transform:translateY(20px);transition:all 0.7s var(--E);}
 .sr.on{opacity:1;transform:none;}
 .w{max-width:var(--w);margin:0 auto;padding:0 var(--g);}
 .h2{font-size:42px;font-weight:500;letter-spacing:-0.04em;line-height:1;margin-bottom:60px;}
 
 @keyframes blink{0%,100%{opacity:1;} 50%{opacity:0.3;}}
-footer{padding:60px var(--g);max-width:var(--w);margin:0 auto;border-top:1px solid var(--b);font-family:var(--mono);font-size:8px;color:var(--ink-4);display:flex;justify-content:space-between;}
+footer{padding:60px var(--g);max-width:var(--w);margin:0 auto;border-top:1px solid var(--b);font-family:var(--mono);font-size:8px;color:var(--ink-4);display:flex;justify-content:space-between; letter-spacing: 0.1em;}
 </style>
 </head>
 <body>
@@ -71,59 +71,59 @@ footer{padding:60px var(--g);max-width:var(--w);margin:0 auto;border-top:1px sol
 <div class="intro" id="intro">
   <div class="i-meta">
     <div class="i-log" id="i-log"></div>
-    <div class="i-status"><span class="status-pip"></span> SYS_BOOT_ACTIVE</div>
+    <div class="i-status"><span class="status-pip"></span> CORE_INIT_ACTIVE</div>
   </div>
   <div class="i-center">
     <div class="i-stage"><span class="iw" id="iw">Initializing_</span></div>
     <div class="i-progress-wrap"><div class="i-progress-bar" id="i-bar"></div></div>
   </div>
-  <div class="i-ver">DIDA_INTELLIGENCE // KERNEL_3.4.0</div>
+  <div class="i-ver">DIDA_SYS_STABLE // 0xDE440</div>
 </div>
 
 <nav id="nav">
-  <a href="#" class="logo">dida // core</a>
-  <div style="font-family:var(--mono); font-size:9px; letter-spacing:0.1em; opacity:0.6;">[ APPROACH ] [ CASES ] [ RESEARCH ]</div>
+  <a href="#" class="logo">dida // lab</a>
+  <div style="font-family:var(--mono); font-size:9px; letter-spacing:0.2em; opacity:0.6;">[ APPROACH ] [ CASES ] [ RESEARCH ]</div>
 </nav>
 
 <header class="hero" id="hero">
   <canvas id="hc"></canvas>
-  <div>
+  <div class="hero-main">
     <span class="ey">Custom Machine Learning</span>
     <h1>Built for the<br>problem you<br><em>actually have.</em></h1>
-    <p class="hero-sub">We engineer precision intelligence systems for high-stakes enterprise data and industrial operations.</p>
+    <p class="hero-sub">Research-grade intelligence engineered for the technical constraints of industrial enterprise.</p>
   </div>
   <aside class="hero-aside">
-    <div style="margin-bottom:48px;"><div style="font-size:32px; font-weight:500;">32<sup>+</sup></div><span class="ey">Engineers</span></div>
-    <div><div style="font-size:32px; font-weight:500;">PhD<sup>s</sup></div><span class="ey">Research Depth</span></div>
+    <div style="margin-bottom:48px;"><div style="font-size:32px; font-weight:500; letter-spacing: -0.04em;">32<sup>+</sup></div><span class="ey">Core Engineers</span></div>
+    <div><div style="font-size:32px; font-weight:500; letter-spacing: -0.04em;">PhD<sup>s</sup></div><span class="ey">Research Depth</span></div>
   </aside>
 </header>
 
 <section class="sys-snapshot w sr">
   <div class="sys-grid">
-    <div class="sys-col"><span class="ey">Live Nodes</span><div class="sys-val">Active_v4.2</div></div>
-    <div class="sys-col"><span class="ey">Inference</span><div class="sys-val">14.2ms <small style="opacity:0.4;">AVG</small></div></div>
-    <div class="sys-col"><span class="ey">Topology</span><div class="sys-val">Transformer_Custom</div></div>
-    <div class="sys-col"><span class="ey">System Status</span><div class="sys-val" style="color:var(--teal);">● NOMINAL</div></div>
+    <div class="sys-col"><span class="ey">Model Nodes</span><div class="sys-val">Active_v4.2.0</div></div>
+    <div class="sys-col"><span class="ey">P99 Latency</span><div class="sys-val">14.2ms <small style="opacity:0.4; font-size: 10px;">PROD</small></div></div>
+    <div class="sys-col"><span class="ey">Data Scale</span><div class="sys-val">1.2B_TENSORS</div></div>
+    <div class="sys-col"><span class="ey">System Health</span><div class="sys-val" style="color:var(--teal);">● OPERATIONAL</div></div>
   </div>
 </section>
 
 <section class="w sr">
   <span class="ey">Methodology</span>
-  <h2 class="h2">Research-grade engineering.<br>Industrial reliability.</h2>
+  <h2 class="h2">Mathematical rigor.<br>Industrial deployment.</h2>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--b); border:1px solid var(--b);">
-    <div style="background:var(--bg); padding:48px;"><h3 style="font-weight:400;margin-bottom:16px;">Mathematical Rigor</h3><p style="font-size:14px;line-height:1.6;opacity:0.6;">We build on verified first principles to ensure production stability.</p></div>
-    <div style="background:var(--bg); padding:48px;"><h3 style="font-weight:400;margin-bottom:16px;">Production Depth</h3><p style="font-size:14px;line-height:1.6;opacity:0.6;">Closing the gap between prototype notebooks and enterprise MLOps.</p></div>
+    <div style="background:var(--bg); padding:48px;"><h3 style="font-weight:400;margin-bottom:16px; letter-spacing: -0.02em;">Verified Models</h3><p style="font-size:14px;line-height:1.6;opacity:0.6;">We build on first principles to ensure every prediction is mathematically sound and production-ready.</p></div>
+    <div style="background:var(--bg); padding:48px;"><h3 style="font-weight:400;margin-bottom:16px; letter-spacing: -0.02em;">Full IP Ownership</h3><p style="font-size:14px;line-height:1.6;opacity:0.6;">No vendor lock-in. We deliver the full source code and model weights directly to your infrastructure.</p></div>
   </div>
 </section>
 
 <footer>
-  <div>DIDA // BERLIN RESEARCH LAB</div>
-  <div>© 2026 // SYSTEM_STABLE</div>
+  <div>DIDA // BERLIN RESEARCH GROUP</div>
+  <div>KERNEL_3.4.0 // STABLE_REL</div>
 </footer>
 
 <script>
-/* ── ELITE INTRO LOGIC ── */
-const words = ['Establishing_Link', 'Scanning_Drift', 'Optimizing_Tensors', 'Dida_Systems'];
+/* ── ELITE INITIALIZATION LOGIC ── */
+const words = ['Establishing_Link', 'Scanning_Network', 'Optimizing_Weights', 'Dida_Systems'];
 const logEl = document.getElementById('i-log');
 const bar = document.getElementById('i-bar');
 const iw = document.getElementById('iw');
@@ -144,7 +144,7 @@ function runIntro() {
       setTimeout(() => {
         document.getElementById('intro').classList.add('out');
         initPage();
-      }, 500);
+      }, 600);
       return;
     }
     iw.innerHTML = words[wordIdx]; iw.classList.add('in');
@@ -152,13 +152,13 @@ function runIntro() {
     setTimeout(() => {
       if(wordIdx < words.length - 1) iw.classList.remove('in');
       wordIdx++;
-      setTimeout(nextWord, 300);
-    }, 1100);
+      setTimeout(nextWord, 350);
+    }, 1200);
   }
   nextWord();
 }
 
-/* ── SIGNAL ENGINE ── */
+/* ── MECHANICAL SIGNAL ENGINE ── */
 const canvas = document.getElementById('hc');
 const ctx = canvas.getContext('2d');
 let W, H, raf, alive = false, drift = 0, lastBurst = 0;
@@ -179,15 +179,29 @@ function resize() {
 function draw(ts) {
   if(!alive) return;
   ctx.clearRect(0,0,W,H);
-  if(ts - lastBurst > 3000) { drift = (Math.random()-0.5)*30; lastBurst = ts; }
-  let y = H * 0.45 + (drift * Math.sin(ts * 0.001));
+  if(ts - lastBurst > 3000) { 
+      drift = (Math.random()-0.5)*40; 
+      lastBurst = ts; 
+  }
+  
+  // Mechanical path logic
+  let targetY = H * 0.45 + (drift * Math.sin(ts * 0.001));
   ctx.strokeStyle = `rgba(0,146,146,${0.12 + Math.random()*0.05})`;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, y); ctx.lineTo(W*0.4, y); ctx.lineTo(W*0.45, y-8); ctx.lineTo(W*0.55, y-8); ctx.lineTo(W*0.6, y); ctx.lineTo(W, y);
+  ctx.moveTo(0, targetY); 
+  ctx.lineTo(W*0.4, targetY); 
+  ctx.lineTo(W*0.45, targetY-10); 
+  ctx.lineTo(W*0.55, targetY-10); 
+  ctx.lineTo(W*0.6, targetY); 
+  ctx.lineTo(W, targetY);
   ctx.stroke();
+
+  // Micro-metadata
   ctx.font = "7px 'JetBrains Mono'"; ctx.fillStyle = "rgba(0,146,146,0.4)";
-  ctx.fillText(`SIG_DRIFT: ${drift.toFixed(3)}`, 20, y-12);
+  ctx.fillText(`SIG_DRIFT: ${drift.toFixed(3)}`, 20, targetY-15);
+  ctx.fillText(`ID_HEX: 0x${Math.floor(ts).toString(16)}`, W-120, targetY+25);
+  
   raf = requestAnimationFrame(draw);
 }
 
