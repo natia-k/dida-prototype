@@ -274,6 +274,26 @@ nav{
 .imp-left{position:sticky;top:96px;}
 
 .cmp{width:100%;border-collapse:collapse;margin-top:28px;}
+.cmp{position:relative;--scanX:0;}
+.cmp::before{
+  content:'';
+  position:absolute;top:0;bottom:0;
+  left:calc(var(--scanX) * 100%);
+  width:1px;
+  background:rgba(0,146,146,0.26);
+  opacity:0;
+  transform:translateX(-0.5px);
+  transition:opacity 0.12s linear;
+  pointer-events:none;
+}
+.cmp.eval::before{opacity:1;}
+.cmp.eval tbody tr{
+  opacity:0.72;
+  transition:opacity 0.48s linear;
+}
+.cmp.eval tbody tr.on{opacity:1;}
+.cmp.eval tbody tr td:last-child{opacity:0.78;transition:opacity 0.48s linear;}
+.cmp.eval tbody tr.on td:last-child{opacity:1;}
 .cmp th{
   font-family:var(--mono);font-size:7.5px;
   letter-spacing:0.15em;text-transform:uppercase;
@@ -1051,6 +1071,14 @@ const introField = createField('ic', {
   wires:true,
   wireCenterX:0.5,
   wireCenterY:0.5,
+  wireDelayBase:74,
+  wireDelayStep:52,
+  wireDefs:[
+    {side:'L', o:0.055, d:760},
+    {side:'R', o:-0.02, d:840},
+    {side:'T', o:-0.042, d:800},
+    {side:'B', o:0.03, d:820},
+  ],
   lines:[
     {yF:0.44,spd:0.000015,ph:0,  amp:0.022,op:0.205,w:1,  parallaxAmp:0.04},
     {yF:0.50,spd:0.000009,ph:2.2,amp:0.014,op:0.115,w:1,  parallaxAmp:0.03},
@@ -1242,14 +1270,45 @@ const clObs = new IntersectionObserver(es=>{
 const clN = document.getElementById('clNames');
 if(clN) clObs.observe(clN);
 
+function startCmpEvaluation(table){
+  if(!table) return;
+  table.classList.add('eval');
+  const rows = Array.from(table.querySelectorAll('tbody tr'));
+  rows.forEach(r=>r.classList.remove('on'));
+
+  const dur = 1920; /* 1.6–2.2s */
+  const start = performance.now();
+  const offsets = rows.map((_,i)=>0.22 + i*0.12 + (Math.random()*0.03 - 0.015));
+  const armed = new Array(rows.length).fill(false);
+
+  function tick(now){
+    const t = now - start;
+    const p = Math.max(0, Math.min(1, t / dur));
+    table.style.setProperty('--scanX', p.toFixed(4));
+
+    for(let i=0;i<rows.length;i++){
+      if(armed[i]) continue;
+      if(p >= offsets[i]){
+        armed[i] = true;
+        const jitter = 36 + Math.random()*54;
+        setTimeout(()=>rows[i].classList.add('on'), jitter);
+      }
+    }
+
+    if(p < 1) requestAnimationFrame(tick);
+    else table.style.setProperty('--scanX', '1');
+  }
+  requestAnimationFrame(tick);
+}
+
 const cmpObs = new IntersectionObserver(es=>{
   es.forEach(e=>{
     if(e.isIntersecting){
-      setTimeout(()=>e.target.classList.add('scanned'), 180);
+      startCmpEvaluation(e.target);
       cmpObs.disconnect();
     }
   });
-},{threshold:0.4});
+},{threshold:0.45});
 const cmp = document.getElementById('cmpTable');
 if(cmp) cmpObs.observe(cmp);
 
@@ -1306,7 +1365,8 @@ function dismiss(immediate){
   }
 
   heroField.triggerConverge();
-  armHeroText(immediate ? 220 : 400);
+  /* no gap: hero timing starts with intro fade */
+  armHeroText(immediate ? 220 : 20);
 
   setTimeout(()=>{
     intro.remove();
@@ -1317,8 +1377,8 @@ function dismiss(immediate){
 function runIntro(){
   if(!intro) return;
   /* signal feed → identity becomes visible → exit */
-  const tReveal = 860;
-  const tExit = 1220;
+  const tReveal = 980;
+  const tExit = 1280;
   setTimeout(()=>{ if(intro) intro.classList.add('on'); }, tReveal);
   setTimeout(()=>dismiss(false), tExit);
 }
